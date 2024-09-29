@@ -1,0 +1,293 @@
+List of more functionality adding in the future:
+1. Pagination should hide when specific product category is less than total items is visible on per page or show only page number with respected to items are available.
+2. Filter products based on the price and brands (make dropdown menu..)
+4. when search any product change the paginaton value based on the available items per page.
+3. Authentication to sign in using firebase --- Done 
+
+
+How to setup firebase in react js Done
+step 1 : Create the app firebase console 
+step 2 : For testing purpose use firebase service like real time database for testing purpose 
+        ```Choose "Start in Test mode" options for now.```
+
+
+Imp Point ---
+Private routes in React JS are routes that require authentication before granting access to specific components or pages. They ensure that only authenticated users can navigate to designated parts of the application, adding a layer of security.
+example user dashboard page. Done
+
+
+memoize functionality for searchProducts 
+  // const searchResult = querySearch
+  //   ? productSearch.filter((item) =>
+  //       item?.title?.toLowerCase().includes(querySearch.toLowerCase())
+  //     ) // Use productSearch when search query is present
+  //   : cartFilter; //Use cartFilter when there is no search query;
+
+  // the useCallback hook to memoize the setcartFilter function.
+  // useCallback hook to memoize the function and only recreate it when its dependencies change
+  // This helps to ensure that the function reference remains stable unless its dependencies change
+  // memoizedSetcartFilter to the dependency array and using useCallback, you address the linting warning while ensuring that the function reference is stable.
+  // const memoizedSetcartFilter = useCallback(setcartFilter, [setcartFilter]);
+
+
+   let getData = fetch("http://localhost:8001/api/comments");
+    if ((await getData).status === "200") {
+      const resp = (await getData).headers({
+        
+      })
+    } else if ((await getData).status === "404") {
+      console.log("Not exist");
+    } else {
+      console.log("Server ");
+    }
+  
+
+  try {
+    if (isDbUpdate) {
+      console.log("Endpoint /api/comment/user_comment hit");
+      // const user = new CommentAndReview({
+      //   commentText: req.body.commentText,
+      //   productId: req.body.productId,
+      //   userId: req.body.userId,
+      // });
+      const user = {
+        name:""
+      }
+      await user.save();
+      res.status(200).json({ user });
+    }
+  } catch (error) {
+    console.error("Some Internal error");
+    res.status(500).json({ message: "Database update failed" });
+  }
+
+
+
+import { UserComment } from "../model/comment";
+
+export const routeDelete = async (req, res) => {
+  const { _id } = req.body;
+  let deletecomment = UserComment.findByIdAndDelete(_id);
+  if (_id === undefined) {
+    res.status(404).json({ message: "Not found id" });
+  } else {
+    deletecomment
+      .then((data) => {
+        res.status(200).json({
+          success: true,
+          data,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+};
+
+
+import fs from "fs";
+import path from "path";
+
+export const getImageUrl = (pathUrl: string) => {
+  const fileReadDirectory = path.join(__dirname, "src", pathUrl);
+
+  try {
+    // Check if the file exists in the directory
+    if (fs.existsSync(fileReadDirectory)) {
+      console.log(`File found: ${fileReadDirectory}`);
+      // Return the path to be used on the frontend
+      // return `/static/images/${pathUrl}`;
+    }
+    else if(pathUrl)  {
+      return `/static/images/${pathUrl}`;
+    }
+    else {
+      console.error("File does not exist");
+      return null;
+    }
+  } catch (err) {
+    console.error("Error reading the file:", err);
+    return null;
+  }
+};
+
+console.log("Jello from getImages...");
+
+
+Edit value to update in back-end and frontend
+
+now explain create short summary for this working code for my interview
+ const handleEditComment = (e) => {
+    e.preventDefault();
+    const commentId = isEditingComment;
+    if (!commentId) {
+      console.error("No comment ID found for editing");
+      return;
+    }
+    axios
+      .patch(`/api/comment/update/edit_comment/${commentId}`, {
+        commentText: userComment,
+      })
+      .then((resp) => {
+        setIsEditComment(false);
+        setUserComment(resp.data.commentText);
+        setGetComments([
+          ...getUserComments.map((comment) => comment._id === commentId),
+        ]);
+        console.log("Patch data ", resp.data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+Explanation for the Interview:
+
+Prevent Default Form Submission and Check Comment ID:
+
+e.preventDefault() stops the default form submission behavior.
+const commentId = isEditingComment; retrieves the ID of the comment to be edited.
+An error is logged and the function exits if no comment ID is found.
+Send PATCH Request with Updated Comment Text (Asynchronous):
+
+try...catch block handles potential errors during the request.
+const response = await axios.patch(...) makes an asynchronous PATCH request to the server endpoint, sending the updated comment text (userComment) in the request body.
+Handle Successful Response:
+
+Inside the .then(...) block, the function assumes a successful response is received.
+setIsEditComment(false) sets the editing state to false, indicating editing is complete.
+setUserComment(response.data.commentText); (optional) updates the local userComment state with the potentially modified comment text from the server.
+updateCommentsList(commentId, response.data); (implementation details depend on your project) updates the comments list in the React application, likely replacing the edited comment with the updated information.
+
+
+// handling the fetching data  error --> 
+React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array.
+
+In a situation where a variable that the effect depends on is not included in the dependency array, the effect may not be re-executed when the value changes. This can lead to unexpected behavior and bugs in your application.
+
+This error is not a React error but an ESLint error. ESLint provides a plugin specifically for React, which includes a set of rules that are designed to help developers write better React code. One of these rules is the "react-hooks/exhaustive-deps" rule, which detects the “React Hook useEffect has a missing dependency” error.
+
+Solution -->
+
+Best Practice
+Using useCallback for fetchData or moving it outside the component (if possible) are the best ways to avoid unnecessary re-renders while following React's rules of hooks.
+
+1. If fetchData is declared inside the component, you should include it in the dependency array so that the effect can properly track changes.
+
+2.  Wrap fetchData in useCallback (If fetchData is defined in the same component).
+
+code --> 
+const fetchData = useCallback(() => {
+  // Your fetch logic here
+}, []); 
+
+3. Move fetchData Outside the Component (If fetchData doesn't depend on component state).
+
+Solution 3 only works --
+i. Independent logic: If the function doesn't rely on any state, props, or context values from the component, it’s a good candidate to be moved outside the component.
+
+ii.Utility functions: Functions that could be reused in other components or parts of your code can be defined outside.
+
+Edge Case 
+If fetchData function depends on the state or props of the component, moving it outside the component won’t work because it needs access to the dynamic values (state or props) that change during the component's lifecycle.
+
+Solution - 
+Use useCallback to Memoize the Function
+SInce fetchData depends on state, but you want to avoid unnecessary re-renders or re-running the effect, you can wrap fetchData in useCallback
+
+Why Use useCallback?
+--> Memoization: useCallback ensures that fetchData only changes when its dependencies (e.g., state or props) change. This prevents useEffect from re-running unnecessarily.
+
+--> Dependency Management: By memoizing fetchData, you can safely include it in the dependency array of useEffect without triggering infinite loops or unnecessary effect executions.
+
+
+code - const fetchData = useCallback(() => {
+    // Logic to fetch data based on state or props
+    console.log('Fetching data...');
+    // Example API call or some operation
+    // fetch('/api/data').then(response => setData(response.data));
+  }, []); 
+
+Benefits of Defining Functions Outside the Component
+
+i. No unnecessary re-renders: Functions outside the component do not change on re-renders, which means useEffect doesn’t need to track them, preventing unnecessary re-runs.
+ii. Cleaner dependency management: The dependency array can remain empty or minimal.
+
+When to Move Functions Outside
+i. Independent logic: If the function doesn't rely on any state, props, or context values from the component, it’s a good candidate to be moved outside the component.
+ii. Utility functions: Functions that could be reused in other components or parts of your code can be defined outside.
+
+
+Case 2. Working With Objects and Functions
+When working with objects and Arrays, it’s not enough to add them to your dependency array, you will need to either memoize them or move them into the useEffect hook or outside the component to avoid unnecessary re-renders.
+
+This is because, in JavaScript, objects and arrays are compared by reference and point to a different location in memory every time — its value will change on every render, causing an infinite re-render loop.
+
+import { useState, useEffect } from 'react';
+
+const App = () => {
+  const [user, setUser] = useState({});
+
+  // 👇️this will change on every render
+  let newUser = { name: 'Jane', age: 28 };
+
+  useEffect(() => {
+    setUser(newUser);
+  }, [newUser]);
+
+  return (
+    <div>
+      <h1>Hello World</h1>
+    </div>
+  );
+};
+
+export default App;
+
+A better way to solve this problem is to use memoization hooks like useMemo for your object and useCallback for functions. This will help you retain the object or function within the component and in the dependency array.
+
+Note: Memoization hooks are a set of hooks that allow you to cache the results of expensive computations and avoid re-computing them unnecessarily.
+
+This is what your code will look like when you use the useMemo hook to memoize your object:
+
+
+
+.product-suggestion {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+
+  &:active {
+    z-index: 100;
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  li {
+    font-size: 16px;
+    font-family: $RobotoSlab;
+    font-weight: 400;
+    color: $black-color;
+    cursor: pointer;
+
+    &:active {
+      background-color: #f1f1f1;
+    }
+  }
+
+  &_loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+  }
+}

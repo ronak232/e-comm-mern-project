@@ -1,0 +1,77 @@
+@import "./variables";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+html {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+  background-color: $white-color;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: thin; /* "auto" or "thin" */
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  transition: color 0.25s ease-in-out;
+  color: inherit;
+  font-weight: 400;
+  font-size: 16px;
+  font-family: $RobotoSlab;
+}
+
+h1 {
+  color: $white-color;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+li {
+  list-style-type: none;
+}
+
+small {
+  font-size: 12px;
+}
+
+button {
+  border: 0;
+  outline: none;
+  line-height: 12px;
+  cursor: pointer;
+  text-transform: capitalize;
+  background: $light-blue;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: $zilla-blue;
+  font-weight: 600;
+  // font-family: $;
+}
+
+.dark {
+  background: $black-color;
+  color: $white-color;
+}
+
+.light {
+  color: $black-color;
+  background-color: $white-color;
+}

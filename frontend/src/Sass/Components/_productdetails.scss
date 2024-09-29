@@ -1,0 +1,159 @@
+.productdetails {
+  &__container {
+    @include container(flex, space-between, center);
+  }
+
+  &__card {
+    display: flex;
+    gap: 14px;
+    width: 100%;
+    margin-right: 0;
+    flex-direction: column;
+    margin-bottom: 20px;
+    &_img {
+      max-width: 100%;
+      display: block;
+      max-height: 380px;
+
+      img {
+        object-fit: cover;
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    &_thumbsimgs {
+      width: 100%;
+    }
+
+    &_body {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
+
+      @include devices(tablet) {
+        width: 50%;
+      }
+    }
+
+    &_title {
+      padding-bottom: 12px;
+    }
+
+    &_addtocart {
+      align-items: center;
+      background-color: #0a66c2;
+      border: 0;
+      border-radius: 100px;
+      box-sizing: border-box;
+      color: #ffffff;
+      cursor: pointer;
+      display: inline-flex;
+      font-family: $openSans;
+      font-size: 14px;
+      font-weight: 600;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 4px;
+      max-width: 100%;
+      min-width: 130px;
+      text-align: center;
+      touch-action: manipulation;
+      transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s,
+        box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s,
+        color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+      user-select: none;
+      -webkit-user-select: none;
+      vertical-align: middle;
+    }
+
+    &_addtocart:hover,
+    .save_comment:focus {
+      background-color: #16437e;
+      color: #ffffff;
+    }
+
+    &_addtocart:active {
+      background: #09223b;
+      color: rgb(255, 255, 255, 0.7);
+    }
+
+    &_addtocart:disabled {
+      cursor: not-allowed;
+      background: rgba(0, 0, 0, 0.08);
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+    @include devices(tablet) {
+      flex-direction: row;
+    }
+
+    &_pdpthumbs {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      gap: 12px;
+
+      &_imgs {
+        max-width: 100%;
+      }
+
+      @include devices(tablet) {
+        width: 50%;
+      }
+    }
+  }
+
+  &__pdpgallery {
+    width: 100%;
+    display: block;
+    position: relative;
+    height: auto;
+
+    img {
+      max-width: 100%;
+      object-fit: cover;
+      display: block;
+      min-height: 100%;
+    }
+  }
+}
+
+.product-suggestion {
+  background-color: $white-color;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  overflow: hidden scroll;
+  color: $black-color;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  width: 100%;
+  max-height: 200px;
+
+  &:active {
+    z-index: 100;
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  li {
+    font-size: 14px;
+    font-family: $RobotoSlab;
+    font-weight: 400;
+    color: $black-color;
+
+    &:hover {
+      background-color: #f1f1f1;
+    }
+
+    a {
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+}

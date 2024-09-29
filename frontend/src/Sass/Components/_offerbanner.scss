@@ -1,0 +1,83 @@
+.product__offer-banner {
+  width: 100%;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  &-first {
+    width: 100%;
+    min-height: 300px;
+    background-image: url(../../Images/sale.jpg);
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+  }
+  &-second {
+    width: 100%;
+    min-height: 300px;
+    background-image: url(../../Images/super-deal-offer.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+  }
+  .btn-sale,
+  .btn-shop {
+    align-items: center;
+    background-color: #0a66c2;
+    border: 0;
+    border-radius: 100px;
+    box-sizing: border-box;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: $RobotoSlab;
+    font-size: 14px;
+    font-weight: 600;
+    justify-content: center;
+    min-height: 40px;
+    padding: 9px 4px;
+    max-width: 100%;
+    min-width: 130px;
+    text-align: center;
+    touch-action: manipulation;
+    transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s,
+      box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s,
+      color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+  }
+
+  .btn-sale:hover,
+  .btn-sale:focus,
+  .btn-shop:hover,
+  .btn-shop:focus {
+    background-color: #16437e;
+    color: #ffffff;
+  }
+
+  .btn-sale:active,
+  .btn-shop:active {
+    background: #09223b;
+    color: rgb(255, 255, 255, 0.7);
+  }
+
+  .btn-sale:disabled,
+  .btn-shop:disabled {
+    cursor: not-allowed;
+    background: rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.3);
+  }
+  @include devices(mobile) {
+    flex-wrap: nowrap;
+  }
+}

@@ -1,0 +1,227 @@
+.store-account {
+  min-height: calc(100vh - 50vh - 20px);
+  background: url(../../Images/colorful-paper-shopping-bags-blue-surface.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  &__container {
+    @include Container();
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    padding: 34px 0;
+    min-height: 650px;
+
+    @include devices(tablet) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__logo {
+    max-width: 58px;
+    max-height: 45px;
+  }
+
+  &__card {
+    display: flex;
+    justify-content: center;
+    padding: 46px 0;
+    &-body {
+      box-shadow: 2px 2px 14px rgba(0, 0, 0, 0.15);
+      background: $white-color;
+      border-radius: 6px;
+      padding: 34px;
+      height: 100%;
+      min-width: 100%;
+      color: $black-color;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      @include devices(tablet) {
+        min-width: 550px;
+      }
+    }
+    &-title {
+      font-size: 42px;
+      font-weight: 600;
+      font-family: $playball-font;
+      letter-spacing: 0.3rem;
+      margin-top: 22px;
+      color: $blue-color;
+    }
+
+    &-loginoptions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    &-link {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      gap: 16px;
+      &-text {
+        color: $black-color;
+        font-size: 16px;
+        font-weight: 400;
+        font-family: $font-montserrat;
+      }
+      &-media {
+        background: #f3f5f9;
+        padding: 10px;
+        border-radius: 8px;
+        width: 40px;
+        text-align: center;
+        color: #4b566b;
+      }
+    }
+  }
+  &__form {
+    width: 100%;
+    &-control {
+      display: flex;
+      gap: 24px;
+      flex-direction: column;
+      position: relative;
+      p {
+        font-size: 14px;
+        font-weight: 400;
+        font-family: $font-montserrat;
+      }
+      &-validation {
+        position: relative;
+        &-text {
+          width: 100%;
+          padding: 10px 40px;
+          font-size: 16px;
+          border-radius: 5px;
+          border: 2px solid $border-grey;
+          :focus {
+            outline: none;
+            border: 0;
+          }
+        }
+      }
+      &-icons {
+        position: absolute;
+        left: 0;
+        top: 12px;
+        margin-left: 10px;
+        font-size: 16px;
+      }
+    }
+  }
+  &__welcome-mssg {
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.2rem;
+    font-family: $RobotoSlab;
+  }
+}
+
+.bg-grey {
+  font-size: 18px;
+}
+
+.bg-google {
+  &:hover {
+    background: #f46b6b;
+    color: $white-color;
+    box-shadow: 0 0.5rem 1.125rem -0.5rem rgba(252, 113, 113, 0.9);
+    transition: all 0.5s ease;
+  }
+}
+
+.bg-facebook {
+  &:hover {
+    background: #3b5998;
+    color: $white-color;
+    box-shadow: 0 0.5rem 1.125rem -0.5rem rgba(80, 118, 255, 0.9);
+    transition: all 0.5s ease;
+  }
+}
+.bg-twitter {
+  &:hover {
+    background-color: #1da1f2;
+    box-shadow: 0 0.5rem 1.125rem -0.5rem rgba(29, 161, 242, 0.9);
+    color: $white-color;
+  }
+}
+
+// Error mssg
+.fieldmssg-error {
+  color: $error-mssg;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: $RobotoSlab;
+  padding-top: 8px;
+}
+
+.user-registration {
+  border-top: 1px solid #4b566b;
+  padding-top: 1rem;
+  width: 100%;
+  span {
+    font-size: 16px;
+    font-weight: 500;
+    font-family: $RobotoSlab;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    button {
+      background: transparent;
+      padding: 0;
+    }
+  }
+}
+
+.user-login {
+  border-top: 1px solid #4b566b;
+  padding-top: 1rem;
+  width: 100%;
+  span {
+    font-size: 16px;
+    font-weight: 500;
+    font-family: $font-montserrat;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    button {
+      background: transparent;
+      padding: 0;
+    }
+  }
+}
+
+.login-btn,
+.signout-btn {
+  display: flex;
+  align-items: center;
+  button {
+    background: rgb(56, 63, 220);
+    border-radius: 20px;
+    box-shadow: #f46b6b;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: $font-montserrat;
+    color: $white-color;
+  }
+}
+
+.login-error-mssg {
+  background-color: red;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  border-left: 10px solid red;
+  border-radius: 6px;
+  transition: all 0.5s ease-in-out;
+  color: $black-color;
+  font-weight: 400;
+  font-size: 16px;
+}

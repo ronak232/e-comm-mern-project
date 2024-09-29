@@ -1,0 +1,57 @@
+.skeleton {
+  position: relative;
+  width: 100%;
+  max-height: 500px;
+  margin: 0.45rem 0;
+  border-radius: 0.3rem;
+  height: 100%;
+}
+
+.skeleton-bg {
+  border-radius: 2.25rem;
+}
+
+.skeleton.comment {
+  background: linear-gradient(
+    90deg,
+    rgb(208, 208, 208) 26%,
+    rgb(211, 208, 208) 55%
+  );
+  width: 100%;
+  max-width: 140px;
+  min-height: 20px;
+}
+
+.skeleton.expression {
+  background: linear-gradient(
+    90deg,
+    rgb(225, 225, 225) 26%,
+    rgb(165, 165, 165) 55%
+  );
+  width: 100%;
+  min-height: 30px;
+}
+
+.skeleton.username {
+  background: linear-gradient(
+    90deg,
+    rgb(184, 184, 184) 26%,
+    rgb(201, 201, 201) 55%
+  );
+  width: 100%;
+  max-width: 50px;
+  min-height: 10px;
+}
+
+@keyframes skeletonAnimation {
+  20% {
+    opacity: 0.2;
+  }
+  70% {
+    opacity: 0.7;
+  }
+}
+
+.skeleton-animation {
+  animation: skeletonAnimation 2s cubic-bezier(0.2, 0, 0.6, 1) infinite;
+}
