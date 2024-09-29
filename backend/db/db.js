@@ -8,14 +8,6 @@ const client = mongoose.connect(process.env.mongo_uri || 8001, {
   socketTimeoutMS: 40000,
 });
 
-client
-  .then(() => {
-    console.log("Mongo Db is connected ");
-  })
-  .catch((err) => {
-    console.log("MongoDb connection error ", err);
-  });
-
 let isDBConneted = false;
 
 async function getDatabaseProps() {
@@ -30,7 +22,7 @@ async function getDatabaseProps() {
       }
     });
   } catch (err) {
-    console.log("Failed to fetch data ", err);
+    console.error("Failed to fetch data ", err);
   }
 }
 

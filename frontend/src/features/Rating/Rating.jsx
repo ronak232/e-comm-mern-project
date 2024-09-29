@@ -1,7 +1,6 @@
 import { RiStarFill, RiStarHalfFill, RiStarLine } from "react-icons/ri";
 
 function Rating({ stars }) {
-  // console.log(stars);
   return (
     <div className="product-rating">
       {/* We can generate the sequence of the numbers */}
