@@ -2,7 +2,7 @@ export const getImageUrl = (pathUrl: string) => {
   try {
     // Check if the file exists in the directory
     if (pathUrl) {
-      return `/static/images/${pathUrl}`;
+      return `${process.env.REACT_APP_BASE_URL}/static/images/${pathUrl}`;
     } else {
       console.error("File does not exist");
       return null;

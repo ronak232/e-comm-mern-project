@@ -253,7 +253,7 @@ function ReviewAndComment() {
       </form>
       {
         <ul className="product__reviews">
-          {isError ? (
+          {!isError ? (
             <p className="pl-2 text-[18px] rounded-md">Something Wrong 😔</p>
           ) : loader ? (
             // Show skeleton loader when loading is true
