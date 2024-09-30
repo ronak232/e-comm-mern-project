@@ -21,7 +21,7 @@ function ReviewAndComment() {
   const { id } = useParams();
   const ref = useRef(null); //Ref is used to track the suggestion box. This helps to detect if the user clicks outside the box.
 
-  const baseURL = process.env.BASE_URL;
+  const baseURL = process.env.REACT_APP_BASE_URL;
 
   let options = {
     weekday: "short",
