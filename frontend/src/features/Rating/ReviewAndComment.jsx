@@ -21,6 +21,8 @@ function ReviewAndComment() {
   const { id } = useParams();
   const ref = useRef(null); //Ref is used to track the suggestion box. This helps to detect if the user clicks outside the box.
 
+  const baseURL = process.env.BASE_URL;
+
   let options = {
     weekday: "short",
     year: "numeric",
@@ -54,7 +56,9 @@ function ReviewAndComment() {
       setLoader(true);
       setError(false);
       await axios
-        .get(`/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
+        .get(
+          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
+        )
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
@@ -85,7 +89,7 @@ function ReviewAndComment() {
       return;
     }
     await axios
-      .post(`/api/comment/post_comment`, user)
+      .post(`${baseURL}/api/comment/post_comment`, user)
       .then((resp) => {
         setLoader(true);
         setGetComments([...getUserComments, resp?.data]);
@@ -100,7 +104,7 @@ function ReviewAndComment() {
   // delete method
   const handleDelete = async (id) => {
     await axios
-      .delete(`/api/comment/delete/${id}`)
+      .delete(`${baseURL}/api/comment/delete/${id}`)
       .then((resp) => {
         if (resp.data) {
           let newComment = getUserComments.filter(
@@ -129,7 +133,7 @@ function ReviewAndComment() {
     e.preventDefault();
     const commentId = isEditingComment;
     axios
-      .patch(`/api/comment/update/edit_comment/${commentId}`, {
+      .patch(`${baseURL}/api/comment/update/edit_comment/${commentId}`, {
         commentText: userComment,
       })
       .then((resp) => {
@@ -148,7 +152,7 @@ function ReviewAndComment() {
 
   const handleLikeComment = async (id) => {
     await axios
-      .patch(`/api/comment/update/user_react/like/${id}`)
+      .patch(`${baseURL}/api/comment/update/user_react/like/${id}`)
       .then((res) => {
         return res.data;
       })
@@ -159,7 +163,7 @@ function ReviewAndComment() {
 
   const handleDisLikeComment = async (id) => {
     await axios
-      .patch(`/api/comment/update/user_react/dislike/${id}`)
+      .patch(`${baseURL}/api/comment/update/user_react/dislike/${id}`)
       .then((res) => {
         return res.data;
       })
