@@ -63,9 +63,9 @@ function ProductDetails({
             modules={[FreeMode, Navigation, Thumbs]}
             className="productdetails__pdpgallery"
           >
-            {matchedProducts?.images.map((img) => {
+            {matchedProducts?.images.map((img, index) => {
               return (
-                <SwiperSlide>
+                <SwiperSlide key={index}>
                   <img src={img} alt="" />
                 </SwiperSlide>
               );

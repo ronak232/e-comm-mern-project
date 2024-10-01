@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFirebaseAuth } from "../../hooks/firebase/firebase..config";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
@@ -12,11 +12,13 @@ function ReviewAndComment() {
   const [userComment, setUserComment] = useState("");
   const [getUserComments, setGetComments] = useState([]);
   const [isEditingComment, setIsEditComment] = useState(null);
-  const [isError, setError] = useState(false);
+  const [isError, setError] = useState(false); // handle for server error
+  const [inputError, setInputError] = useState(false); // handle for input field
   const [loader, setLoader] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [showPagination, setShowPagination] = useState(false);
   const [totalPages, setTotalPages] = useState(null);
+  const [updateUI, setUpdateUI] = useState(false); // track ui changes
   const { isUserLoggedIn } = useFirebaseAuth();
   const { id } = useParams();
   const ref = useRef(null); //Ref is used to track the suggestion box. This helps to detect if the user clicks outside the box.
@@ -50,41 +52,14 @@ function ReviewAndComment() {
     ref.current.style.height = `${Math.max(ref.current.scrollHeight)}px`;
   };
 
-  // get method
-  const fetchData = useCallback(
-    async (currentPage = 1) => {
-      setLoader(true);
-      setError(false);
-      await axios
-        .get(
-          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
-        )
-        .then((resp) => {
-          const { comments, showPagination, totalPage, success } = resp?.data;
-          if (success) {
-            setLoader(false);
-            setGetComments(comments);
-            setTotalPages(totalPage);
-            setShowPagination(showPagination);
-          }
-        })
-        .catch((err) => {
-          setLoader(false);
-          setError(true);
-          console.error(err);
-        });
-    },
-    [id]
-  );
-
   // check the authentication prior to add comment
   // post
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (userComment === "") {
-      setError(true);
+      setInputError(true);
       setTimeout(() => {
-        setError(false);
+        setInputError(false);
       }, 2500);
       return;
     }
@@ -93,6 +68,7 @@ function ReviewAndComment() {
       .then((resp) => {
         setLoader(true);
         setGetComments([...getUserComments, resp?.data]);
+        setUpdateUI((prev) => !prev); // update the ui changes
         setUserComment("");
         setLoader(false);
       })
@@ -110,6 +86,7 @@ function ReviewAndComment() {
           let newComment = getUserComments.filter(
             (item) => resp.data._id !== item.id
           );
+          setUpdateUI((prev) => !prev);
           setUserComment(newComment);
         } else {
           setError("Cannot delete the comment...");
@@ -142,6 +119,7 @@ function ReviewAndComment() {
         setGetComments([
           ...getUserComments.map((comment) => comment._id === commentId),
         ]); // It iterates through the existing comments, replacing the comment with the ID commentId (the one being edited) with the response data (resp.data), which might contain the updated comment details. This updates the comment list
+        setUpdateUI((prev) => !prev);
         setUserComment("");
       })
 
@@ -154,6 +132,7 @@ function ReviewAndComment() {
     await axios
       .patch(`${baseURL}/api/comment/update/user_react/like/${id}`)
       .then((res) => {
+        setUpdateUI((prev) => !prev); // update the ui changes
         return res.data;
       })
       .catch((err) => {
@@ -165,6 +144,7 @@ function ReviewAndComment() {
     await axios
       .patch(`${baseURL}/api/comment/update/user_react/dislike/${id}`)
       .then((res) => {
+        setUpdateUI((prev) => !prev); // update the ui changes
         return res.data;
       })
       .catch((err) => {
@@ -200,21 +180,44 @@ function ReviewAndComment() {
   };
 
   useEffect(() => {
-    window.addEventListener("resize", autoresize());
+    const fetchData = async (currentPage = 1) => {
+      setLoader(true);
+      setError(false);
+      await axios
+        .get(
+          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
+        )
+        .then((resp) => {
+          const { comments, showPagination, totalPage, success } = resp?.data;
+          if (success) {
+            setLoader(false);
+            setGetComments(comments);
+            setTotalPages(totalPage);
+            setShowPagination(showPagination);
+          }
+        })
+        .catch((err) => {
+          setLoader(false);
+          setError(true);
+          console.error(err.message);
+        });
+    };
     fetchData(currentPage);
+    window.addEventListener("resize", autoresize());
     return () => {
       window.removeEventListener("resize", autoresize);
     };
-  }, [currentPage, fetchData]); // Call fetchComments when productId or page changes
+  }, [baseURL, currentPage, id, updateUI]);
+  // Call fetchComments when productId or page changes
 
-  return (
+  return isError ? (
     <div className="product__reviews">
       <p className="product__reviews_title">Comments and Reviews</p>
       <h3>Write your comment</h3>
       <form
         onSubmit={(e) => (isEditingComment ? handleSave(e) : handleAddComment)}
       >
-        <textarea
+        <input
           className="product__reviews_textfield"
           name="product_reviews"
           row={0}
@@ -222,8 +225,8 @@ function ReviewAndComment() {
           onChange={(e) => setUserComment(e.target.value)}
           value={userComment}
           ref={ref}
-        ></textarea>
-        {isError ? (
+        ></input>
+        {inputError ? (
           <p className="empty-err">Please leave a comment 😔</p>
         ) : null}
         <div>
@@ -251,62 +254,60 @@ function ReviewAndComment() {
           )}
         </div>
       </form>
-      {
-        <ul className="product__reviews">
-          {!isError ? (
-            <p className="pl-2 text-[18px] rounded-md">Something Wrong 😔</p>
-          ) : loader ? (
-            // Show skeleton loader when loading is true
-            [...Array(3)].map((_, index) => {
-              return <SkeletonCard key={index} />;
-            })
-          ) : getUserComments?.length > 0 ? (
-            // Show comments if available and not loading
-            getUserComments.map((value) => {
-              return (
-                <li className="product__reviews_items" key={value._id}>
-                  <h1 className="product__reviews_custname text-gray-500">
-                    {value.userName}
-                  </h1>
-                  <p>{value.commentText}</p>
-                  <span className="product__reviews_comment">
-                    <span className="product__reviews_expression">
-                      <button onClick={() => handleLikeComment(value._id)}>
-                        <GrLike />
-                        <span>{value.likes}</span>
-                      </button>
-                      <button onClick={() => handleDisLikeComment(value._id)}>
-                        <GrDislike />
-                        <span>{value.dislikes}</span>
-                      </button>
-                      <span className="product__reviews_postdate">
-                        {value.createdAt}
-                      </span>
-                    </span>
-                    <span className="product__reviews_useraction">
-                      <span>
-                        <button onClick={() => handleEdit(value._id)}>
-                          <BiEdit />
-                        </button>
-                      </span>
-                      <span>
-                        <button onClick={() => handleDelete(value._id)}>
-                          <AiOutlineDelete />
-                        </button>
-                      </span>
+
+      <ul className="product__reviews">
+        {loader ? (
+          // Show skeleton loader when loading is true
+          [...Array(getUserComments.length).keys()].map((_, index) => {
+            return <SkeletonCard key={index} />;
+          })
+        ) : getUserComments?.length > 0 ? (
+          // Show comments if available and not loading
+          getUserComments.map((value) => {
+            return (
+              <li className="product__reviews_items" key={value._id}>
+                <h1 className="product__reviews_custname text-gray-500">
+                  {value.userName}
+                </h1>
+                <p>{value.commentText}</p>
+                <span className="product__reviews_comment">
+                  <span className="product__reviews_expression">
+                    <button onClick={() => handleLikeComment(value._id)}>
+                      <GrLike />
+                      <span>{value.likes}</span>
+                    </button>
+                    <button onClick={() => handleDisLikeComment(value._id)}>
+                      <GrDislike />
+                      <span>{value.dislikes}</span>
+                    </button>
+                    <span className="product__reviews_postdate">
+                      {value.createdAt}
                     </span>
                   </span>
-                </li>
-              );
-            })
-          ) : (
-            // Show this if no comments and not loading
-            <div>
-              <h2>Be the first person to review...</h2>
-            </div>
-          )}
-        </ul>
-      }
+                  <span className="product__reviews_useraction">
+                    <span>
+                      <button onClick={() => handleEdit(value._id)}>
+                        <BiEdit />
+                      </button>
+                    </span>
+                    <span>
+                      <button onClick={() => handleDelete(value._id)}>
+                        <AiOutlineDelete />
+                      </button>
+                    </span>
+                  </span>
+                </span>
+              </li>
+            );
+          })
+        ) : (
+          // Show this if no comments and not loading
+          <div>
+            <h2>Be the first person to review...</h2>
+          </div>
+        )}
+      </ul>
+
       <div className="comment">
         {getUserComments.length > 0 && totalPages >= 1 && showPagination && (
           <div className="comment_pagination">
@@ -336,6 +337,10 @@ function ReviewAndComment() {
           </div>
         )}
       </div>
+    </div>
+  ) : (
+    <div className="server-error">
+      <img src={require("../../Images/server-error.gif")} alt="Server error" />
     </div>
   );
 }

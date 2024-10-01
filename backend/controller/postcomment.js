@@ -22,8 +22,7 @@ export const handlePostComment = async (req, res) => {
     if (!checkDBUpdate) {
       return res.status(500).json({ message: "Internal server error" });
     } else {
-      // res.setHeader("Content-Type", "application/json");
-      return res.status(200).send({ Comments: [isUserCommentSaved] });
+      return res.status(200).json({ Comments: [isUserCommentSaved] });
     }
   } catch (error) {
     console.error("Failed to handle user comment:", error);
