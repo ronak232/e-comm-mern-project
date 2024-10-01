@@ -210,7 +210,7 @@ function ReviewAndComment() {
   }, [baseURL, currentPage, id, updateUI]);
   // Call fetchComments when productId or page changes
 
-  return isError ? (
+  return !isError ? (
     <div className="product__reviews">
       <p className="product__reviews_title">Comments and Reviews</p>
       <h3>Write your comment</h3>
