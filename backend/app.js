@@ -18,12 +18,7 @@ app.use("/", routes);
 app.use(
   "/static/images",
   express.static(path.join(__dirname, "backend", "/public/images")),
-  express.static("./frontend/build")
 );
-
-app.get("*", (req, res) => {
-  res.sendFile(__dirname, "frontend", "build", "index.html");
-});
 
 app.listen(process.env.LOCAL_PORT || 8001, () => {
   console.log("listening on 8001 success");
