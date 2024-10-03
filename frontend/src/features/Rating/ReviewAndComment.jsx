@@ -181,6 +181,8 @@ function ReviewAndComment() {
     setCurrentPage(index);
   };
 
+
+
   useEffect(() => {
     const fetchData = async (currentPage = 1) => {
       setLoader(true);
@@ -188,7 +190,7 @@ function ReviewAndComment() {
         .get(`/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
-          if (success && !isError) {
+          if (success) {
             setLoader(false);
             setGetComments(comments);
             setTotalPages(totalPage);
@@ -197,7 +199,6 @@ function ReviewAndComment() {
         })
         .catch((err) => {
           setLoader(false);
-          setError(true);
           console.error(err.message);
         });
     };
@@ -237,7 +238,6 @@ function ReviewAndComment() {
             ) : (
               <button
                 className="add_comment bg-red-700"
-                disabled={loader}
                 onClick={handleAddComment}
               >
                 Add Comment
