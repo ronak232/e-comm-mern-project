@@ -63,7 +63,7 @@ function ReviewAndComment() {
       return;
     }
     await axios
-      .post(`/api/comment/post_comment`, user)
+      .post(`${baseURL}/api/comment/post_comment`, user)
       .then((resp) => {
         setLoader(true);
         setGetComments([...getUserComments, resp?.data]);
