@@ -12,8 +12,8 @@ function ReviewAndComment() {
   const [userComment, setUserComment] = useState("");
   const [getUserComments, setGetComments] = useState([]);
   const [isEditingComment, setIsEditComment] = useState(null);
-  const [isError, setError] = useState(false); // handle for server error
-  const [inputError, setInputError] = useState(false); // handle for input field
+  const [isError, setError] = useState(null); // handle for server error
+  const [inputError, setInputError] = useState(null); // handle for input field
   const [loader, setLoader] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [showPagination, setShowPagination] = useState(false);
@@ -22,7 +22,6 @@ function ReviewAndComment() {
   const { isUserLoggedIn } = useFirebaseAuth();
   const { id } = useParams();
   const ref = useRef(null); //Ref is used to track the suggestion box. This helps to detect if the user clicks outside the box.
-
   const baseURL = process.env.REACT_APP_BASE_URL;
 
   let options = {
@@ -64,7 +63,7 @@ function ReviewAndComment() {
       return;
     }
     await axios
-      .post(`${baseURL}/api/comment/post_comment`, user)
+      .post(`/api/comment/post_comment`, user)
       .then((resp) => {
         setLoader(true);
         setGetComments([...getUserComments, resp?.data]);
@@ -82,7 +81,7 @@ function ReviewAndComment() {
     await axios
       .delete(`${baseURL}/api/comment/delete/${id}`)
       .then((resp) => {
-        if (resp.data) {
+        if (resp.data && !isError) {
           let newComment = getUserComments.filter(
             (item) => resp.data._id !== item.id
           );
@@ -94,16 +93,19 @@ function ReviewAndComment() {
       })
       .catch((err) => {
         console.error(err.message);
+        setError(true);
       });
   };
 
   // edit
   const handleEdit = (commentId) => {
     setIsEditComment(commentId);
-    const existingComment = getUserComments.find(
-      (comment) => comment._id === commentId
-    );
-    setUserComment(existingComment.commentText);
+    if (user.userId) {
+      const existingComment = getUserComments.find(
+        (comment) => comment._id === commentId
+      );
+      setUserComment(existingComment.commentText);
+    }
   };
 
   const handleSave = (e) => {
@@ -182,14 +184,11 @@ function ReviewAndComment() {
   useEffect(() => {
     const fetchData = async (currentPage = 1) => {
       setLoader(true);
-      setError(false);
       await axios
-        .get(
-          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
-        )
+        .get(`/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
-          if (success) {
+          if (success && !isError) {
             setLoader(false);
             setGetComments(comments);
             setTotalPages(totalPage);
@@ -210,7 +209,7 @@ function ReviewAndComment() {
   }, [baseURL, currentPage, id, updateUI]);
   // Call fetchComments when productId or page changes
 
-  return !isError ? (
+  return (
     <div className="product__reviews">
       <p className="product__reviews_title">Comments and Reviews</p>
       <h3>Write your comment</h3>
@@ -254,7 +253,6 @@ function ReviewAndComment() {
           )}
         </div>
       </form>
-
       <ul className="product__reviews">
         {loader ? (
           // Show skeleton loader when loading is true
@@ -284,6 +282,7 @@ function ReviewAndComment() {
                       {value.createdAt}
                     </span>
                   </span>
+                  {/* {isUserLoggedIn && ( */}
                   <span className="product__reviews_useraction">
                     <span>
                       <button onClick={() => handleEdit(value._id)}>
@@ -296,6 +295,7 @@ function ReviewAndComment() {
                       </button>
                     </span>
                   </span>
+                  {/* )} */}
                 </span>
               </li>
             );
@@ -307,7 +307,6 @@ function ReviewAndComment() {
           </div>
         )}
       </ul>
-
       <div className="comment">
         {getUserComments.length > 0 && totalPages >= 1 && showPagination && (
           <div className="comment_pagination">
@@ -337,10 +336,6 @@ function ReviewAndComment() {
           </div>
         )}
       </div>
-    </div>
-  ) : (
-    <div className="server-error">
-      <img src={require("../../Images/server-error.gif")} alt="Server error" />
     </div>
   );
 }

@@ -11,7 +11,7 @@ import "swiper/css/thumbs";
 import Rating from "../features/Rating/Rating";
 // import ReviewAndComment from "../features/Rating/ReviewAndComment";
 
-const ReviewAndComment = React.lazy(() =>
+export const ReviewAndComment = React.lazy(() =>
   import("../features/Rating/ReviewAndComment")
 );
 
