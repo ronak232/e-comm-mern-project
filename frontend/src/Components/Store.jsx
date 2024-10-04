@@ -10,7 +10,7 @@ function Store() {
         <div className="products-listed--container">
           <div className="products-listed--container-best">
             <ul className="products-listed--container-best-items">
-              <h4>Bestsellers</h4>
+              <h4 className="text-stone-600 font-semibold">Bestsellers</h4>
               {data?.Products?.bestseller?.map((item) => {
                 return (
                   <li
@@ -23,7 +23,7 @@ function Store() {
                       alt=""
                     />
                     <div className="products-listed--links">
-                        <a href="/">{item?.title}</a>
+                      <a href="/">{item?.title}</a>
                       <span className="products-listed--links-price">
                         {item?.price}
                       </span>
@@ -42,7 +42,7 @@ function Store() {
             </ul>
           </div>
           <div className="products-listed--container-new">
-            <h4>New arrivals </h4>
+            <h4 className="text-stone-600 font-semibold">New arrivals </h4>
             <ul className="products-listed--container-new-items">
               {data?.Products?.newArrivals?.map((item) => {
                 return (
@@ -56,7 +56,7 @@ function Store() {
                       alt=""
                     />
                     <div className="products-listed--links">
-                        <a href="/">{item?.title}</a>
+                      <a href="/">{item?.title}</a>
                       {/* </h6> */}
                       <div className="products-listed--links-price">
                         {item?.price}
@@ -77,7 +77,7 @@ function Store() {
           </div>
           <div className="products-listed--container-top">
             <ul className="products-listed--container-top-items">
-              <h4>Top rated</h4>
+              <h4 className="text-stone-600 font-semibold">Top rated</h4>
               {data?.Products?.topRated?.map((item) => {
                 return (
                   <li
@@ -91,7 +91,7 @@ function Store() {
                     />
                     <div className="products-listed--links">
                       {/* <h6 className="products-listed--links-title"> */}
-                        <a href="/">{item?.title}</a>
+                      <a href="/">{item?.title}</a>
                       {/* </h6> */}
                       <div className="products-listed--links-price">
                         {item?.price}

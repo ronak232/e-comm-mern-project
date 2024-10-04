@@ -17,9 +17,11 @@ app.use("/", routes);
 
 app.use(
   "/static/images",
-  express.static(path.join(__dirname, "backend", "/public/images")),
+  express.static(path.join(__dirname, "/public/images"))
 );
 
-app.listen(process.env.LOCAL_PORT || 8001, () => {
+console.log(path.join(__dirname, "public/images"));
+
+app.listen(8001, () => {
   console.log("listening on 8001 success");
 });

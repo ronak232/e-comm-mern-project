@@ -250,44 +250,12 @@ Note: Memoization hooks are a set of hooks that allow you to cache the results o
 
 This is what your code will look like when you use the useMemo hook to memoize your object:
 
+fallthrough : true || false
 
+fallthrough ---  it will immediately 404 any missing file that was supposed to be in the static directory
 
-.product-suggestion {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
+When this option is true, client errors such as a bad request or a request to a non-existent file will cause this middleware to simply call next() to invoke the next middleware in the stack. When false, these errors (even 404s), will invoke next(err).
 
-  &:active {
-    z-index: 100;
-    pointer-events: auto;
-    opacity: 1;
-  }
+Set this option to true so you can map multiple physical directories to the same web address or for routes to fill in non-existent files.
 
-  li {
-    font-size: 16px;
-    font-family: $RobotoSlab;
-    font-weight: 400;
-    color: $black-color;
-    cursor: pointer;
-
-    &:active {
-      background-color: #f1f1f1;
-    }
-  }
-
-  &_loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 101;
-  }
-}
+Use false if you have mounted this middleware at a path designed to be strictly a single file system directory, which allows for short-circuiting 404s for less overhead. This middleware will also reply to all methods.

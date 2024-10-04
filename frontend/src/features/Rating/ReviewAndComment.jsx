@@ -43,12 +43,21 @@ function ReviewAndComment() {
     createdAt: currDate,
   };
 
+  // track the current user id
+  const isCurrentUser = (userId) => {
+    if (userId === user.userId) {
+      return true;
+    }
+    return false;
+  };
+
   const autoresize = () => {
     if (!ref.current) {
       return;
     }
     ref.current.style.height = "auto";
     ref.current.style.height = `${Math.max(ref.current.scrollHeight)}px`;
+    setUpdateUI((prev) => !prev);
   };
 
   // check the authentication prior to add comment
@@ -63,7 +72,7 @@ function ReviewAndComment() {
       return;
     }
     await axios
-      .post(`${baseURL}/api/comment/post_comment`, user)
+      .post(`/api/comment/post_comment`, user)
       .then((resp) => {
         setLoader(true);
         setGetComments([...getUserComments, resp?.data]);
@@ -181,13 +190,13 @@ function ReviewAndComment() {
     setCurrentPage(index);
   };
 
-
-
   useEffect(() => {
     const fetchData = async (currentPage = 1) => {
       setLoader(true);
       await axios
-        .get(`/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
+        .get(
+          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
+        )
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
@@ -282,7 +291,8 @@ function ReviewAndComment() {
                       {value.createdAt}
                     </span>
                   </span>
-                  {/* {isUserLoggedIn && ( */}
+                  {/* {isUserLoggedIn &&
+                    isCurrentUser( */}
                   <span className="product__reviews_useraction">
                     <span>
                       <button onClick={() => handleEdit(value._id)}>
