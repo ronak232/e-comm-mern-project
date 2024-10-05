@@ -14,7 +14,7 @@ function ReviewAndComment() {
   const [isEditingComment, setIsEditComment] = useState(null);
   const [isError, setError] = useState(null); // handle for server error
   const [inputError, setInputError] = useState(null); // handle for input field
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [showPagination, setShowPagination] = useState(false);
   const [totalPages, setTotalPages] = useState(null);
@@ -47,7 +47,6 @@ function ReviewAndComment() {
     if (!ref.current) {
       return;
     }
-    setUpdateUI((prev) => !prev);
     ref.current.style.height = "auto";
     ref.current.style.height = `${Math.max(ref.current.scrollHeight)}px`;
   };
@@ -68,9 +67,9 @@ function ReviewAndComment() {
       .then((resp) => {
         setLoader(true);
         setGetComments([...getUserComments, resp?.data]);
-        setUpdateUI((prev) => !prev); // update the ui changes
-        setUserComment("");
         setLoader(false);
+        setUserComment("");
+        setUpdateUI((prev) => !prev); // update the ui changes
       })
       .catch((err) => {
         console.error(err.message);
@@ -82,12 +81,12 @@ function ReviewAndComment() {
     await axios
       .delete(`${baseURL}/api/comment/delete/${id}`)
       .then((resp) => {
-        if (resp.data && !isError) {
+        if (resp.data.success) {
           let newComment = getUserComments.filter(
             (item) => resp.data._id !== item.id
           );
-          setUpdateUI((prev) => !prev);
           setUserComment(newComment);
+          setUpdateUI((prev) => !prev);
         } else {
           setError("Cannot delete the comment...");
         }
@@ -207,7 +206,7 @@ function ReviewAndComment() {
     return () => {
       window.removeEventListener("resize", autoresize);
     };
-  }, [currentPage, id, updateUI]);
+  }, [baseURL, currentPage, id, updateUI]);
   // Call fetchComments when productId or page changes
 
   return (
