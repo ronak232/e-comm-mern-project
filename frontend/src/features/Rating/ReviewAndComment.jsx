@@ -21,7 +21,7 @@ function ReviewAndComment() {
   const [updateUI, setUpdateUI] = useState(false); // track ui changes
   const { isUserLoggedIn } = useFirebaseAuth();
   const { id } = useParams();
-  const ref = useRef(null); 
+  const ref = useRef(null);
   const baseURL = process.env.REACT_APP_BASE_URL;
 
   let options = {
@@ -80,7 +80,7 @@ function ReviewAndComment() {
   // delete method
   const handleDelete = async (id) => {
     await axios
-      .delete(`/api/comment/delete/${id}`)
+      .delete(`${baseURL}/api/comment/delete/${id}`)
       .then((resp) => {
         if (resp.data && !isError) {
           let newComment = getUserComments.filter(
@@ -185,7 +185,9 @@ function ReviewAndComment() {
   useEffect(() => {
     const fetchData = async (currentPage = 1) => {
       await axios
-        .get(`/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
+        .get(
+          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
+        )
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
