@@ -9,9 +9,8 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import Rating from "../features/Rating/Rating";
-// import ReviewAndComment from "../features/Rating/ReviewAndComment";
-
-export const ReviewAndComment = React.lazy(() =>
+import SkeletonCard from "../Components/Skeleton";
+const ReviewAndComment = React.lazy(() =>
   import("../features/Rating/ReviewAndComment")
 );
 
@@ -108,7 +107,7 @@ function ProductDetails({
             <FiShoppingCart className="cart" />
             Add to Cart
           </button>
-          <Suspense>
+          <Suspense fallback={<SkeletonCard />}>
             <ReviewAndComment />
           </Suspense>
         </div>

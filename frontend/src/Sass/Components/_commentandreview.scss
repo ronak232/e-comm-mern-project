@@ -45,6 +45,10 @@
 
   &_list {
     margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
   }
 
   .save_comment,
@@ -97,7 +101,6 @@
   }
 
   &_items {
-    padding: 15px 0;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -141,7 +144,6 @@
 
   &_postdate {
     font-size: 10px;
-    color: #cecbcb;
   }
 
   &_useraction {

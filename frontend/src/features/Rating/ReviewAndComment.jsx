@@ -14,14 +14,14 @@ function ReviewAndComment() {
   const [isEditingComment, setIsEditComment] = useState(null);
   const [isError, setError] = useState(null); // handle for server error
   const [inputError, setInputError] = useState(null); // handle for input field
-  const [loader, setLoader] = useState(null);
+  const [loader, setLoader] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showPagination, setShowPagination] = useState(false);
   const [totalPages, setTotalPages] = useState(null);
   const [updateUI, setUpdateUI] = useState(false); // track ui changes
   const { isUserLoggedIn } = useFirebaseAuth();
   const { id } = useParams();
-  const ref = useRef(null); //Ref is used to track the suggestion box. This helps to detect if the user clicks outside the box.
+  const ref = useRef(null); 
   const baseURL = process.env.REACT_APP_BASE_URL;
 
   let options = {
@@ -43,21 +43,13 @@ function ReviewAndComment() {
     createdAt: currDate,
   };
 
-  // track the current user id
-  const isCurrentUser = (userId) => {
-    if (userId === user.userId) {
-      return true;
-    }
-    return false;
-  };
-
   const autoresize = () => {
     if (!ref.current) {
       return;
     }
+    setUpdateUI((prev) => !prev);
     ref.current.style.height = "auto";
     ref.current.style.height = `${Math.max(ref.current.scrollHeight)}px`;
-    setUpdateUI((prev) => !prev);
   };
 
   // check the authentication prior to add comment
@@ -88,7 +80,7 @@ function ReviewAndComment() {
   // delete method
   const handleDelete = async (id) => {
     await axios
-      .delete(`${baseURL}/api/comment/delete/${id}`)
+      .delete(`/api/comment/delete/${id}`)
       .then((resp) => {
         if (resp.data && !isError) {
           let newComment = getUserComments.filter(
@@ -192,11 +184,8 @@ function ReviewAndComment() {
 
   useEffect(() => {
     const fetchData = async (currentPage = 1) => {
-      setLoader(true);
       await axios
-        .get(
-          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
-        )
+        .get(`/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
@@ -216,7 +205,7 @@ function ReviewAndComment() {
     return () => {
       window.removeEventListener("resize", autoresize);
     };
-  }, [baseURL, currentPage, id, updateUI]);
+  }, [currentPage, id, updateUI]);
   // Call fetchComments when productId or page changes
 
   return (
@@ -262,7 +251,7 @@ function ReviewAndComment() {
           )}
         </div>
       </form>
-      <ul className="product__reviews">
+      <ul className="product__reviews_list">
         {loader ? (
           // Show skeleton loader when loading is true
           [...Array(getUserComments.length).keys()].map((_, index) => {
@@ -280,32 +269,31 @@ function ReviewAndComment() {
                 <span className="product__reviews_comment">
                   <span className="product__reviews_expression">
                     <button onClick={() => handleLikeComment(value._id)}>
-                      <GrLike />
+                      <GrLike className="text-gray-500 size-3" />
                       <span>{value.likes}</span>
                     </button>
                     <button onClick={() => handleDisLikeComment(value._id)}>
-                      <GrDislike />
+                      <GrDislike className="text-gray-500 size-3" />
                       <span>{value.dislikes}</span>
                     </button>
-                    <span className="product__reviews_postdate">
+                    <span className="product__reviews_postdate text-gray-500">
                       {value.createdAt}
                     </span>
                   </span>
-                  {/* {isUserLoggedIn &&
-                    isCurrentUser( */}
-                  <span className="product__reviews_useraction">
-                    <span>
-                      <button onClick={() => handleEdit(value._id)}>
-                        <BiEdit />
-                      </button>
+                  {user.userId === value.userId && (
+                    <span className="product__reviews_useraction">
+                      <span>
+                        <button onClick={() => handleEdit(value._id)}>
+                          <BiEdit className="text-gray-500" />
+                        </button>
+                      </span>
+                      <span>
+                        <button onClick={() => handleDelete(value._id)}>
+                          <AiOutlineDelete className="text-gray-500" />
+                        </button>
+                      </span>
                     </span>
-                    <span>
-                      <button onClick={() => handleDelete(value._id)}>
-                        <AiOutlineDelete />
-                      </button>
-                    </span>
-                  </span>
-                  {/* )} */}
+                  )}
                 </span>
               </li>
             );

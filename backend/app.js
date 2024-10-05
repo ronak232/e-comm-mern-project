@@ -22,6 +22,6 @@ app.use(
 
 console.log(path.join(__dirname, "public/images"));
 
-app.listen(8001, () => {
+app.listen(process.env.LOCAL_PORT || 8000, () => {
   console.log("listening on 8001 success");
 });
