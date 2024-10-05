@@ -62,10 +62,10 @@ function ReviewAndComment() {
       }, 2500);
       return;
     }
+    setLoader(true);
     await axios
-      .post(`/api/comment/post_comment`, user)
+      .post(`${baseURL}/api/comment/post_comment`, user)
       .then((resp) => {
-        setLoader(true);
         setGetComments([...getUserComments, resp?.data]);
         setLoader(false);
         setUserComment("");
@@ -79,14 +79,14 @@ function ReviewAndComment() {
   // delete method
   const handleDelete = async (id) => {
     await axios
-      .delete(`${baseURL}/api/comment/delete/${id}`)
+      .delete(`/api/comment/delete/${id}`)
       .then((resp) => {
-        if (resp.data.success) {
+        if (resp.data.success && isError === false) {
           let newComment = getUserComments.filter(
             (item) => resp.data._id !== item.id
           );
-          setUserComment(newComment);
           setUpdateUI((prev) => !prev);
+          setUserComment(newComment);
         } else {
           setError("Cannot delete the comment...");
         }
@@ -184,9 +184,7 @@ function ReviewAndComment() {
   useEffect(() => {
     const fetchData = async (currentPage = 1) => {
       await axios
-        .get(
-          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
-        )
+        .get(`/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
