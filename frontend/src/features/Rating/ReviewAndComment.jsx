@@ -112,7 +112,7 @@ function ReviewAndComment() {
     e.preventDefault();
     const commentId = isEditingComment;
     axios
-      .patch(`${baseURL}/api/comment/update/edit_comment/${commentId}`, {
+      .patch(`/api/comment/update/edit_comment/${commentId}`, {
         commentText: userComment,
       })
       .then((resp) => {
@@ -121,8 +121,8 @@ function ReviewAndComment() {
         setGetComments([
           ...getUserComments.map((comment) => comment._id === commentId),
         ]); // It iterates through the existing comments, replacing the comment with the ID commentId (the one being edited) with the response data (resp.data), which might contain the updated comment details. This updates the comment list
-        setUpdateUI((prev) => !prev);
         setUserComment("");
+        setUpdateUI((prev) => !prev);
       })
 
       .catch((err) => {
@@ -188,10 +188,10 @@ function ReviewAndComment() {
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
-            setLoader(false);
             setGetComments(comments);
             setTotalPages(totalPage);
             setShowPagination(showPagination);
+            setLoader(false);
           }
         })
         .catch((err) => {
