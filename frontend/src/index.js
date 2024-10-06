@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
@@ -9,12 +9,14 @@ import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ThemeProvider>
-        <FirebaseProvider>
-          <App />
-        </FirebaseProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <Suspense fallback={require("./Pages/Page-404")}>
+      <BrowserRouter>
+        <ThemeProvider>
+          <FirebaseProvider>
+            <App />
+          </FirebaseProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </Suspense>
   </React.StrictMode>
 );

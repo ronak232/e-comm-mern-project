@@ -8,7 +8,7 @@ import { GrDislike, GrLike } from "react-icons/gr";
 import { AiOutlineDelete } from "react-icons/ai";
 import SkeletonCard from "../../Components/Skeleton";
 
-function ReviewAndComment() {
+export default function ReviewAndComment() {
   const [userComment, setUserComment] = useState("");
   const [getUserComments, setGetComments] = useState([]);
   const [isEditingComment, setIsEditComment] = useState(null);
@@ -182,9 +182,11 @@ function ReviewAndComment() {
   };
 
   useEffect(() => {
-    const fetchData = async (currentPage = 1) => {
+    const fetchData = async () => {
       await axios
-        .get(`${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
+        .get(
+          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
+        )
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
@@ -194,12 +196,12 @@ function ReviewAndComment() {
             setLoader(false);
           }
         })
-        .catch((err) => {
+        .catch(() => {
           setLoader(false);
-          console.error(err.message);
+          setError(true);
         });
     };
-    fetchData(currentPage);
+    fetchData();
     window.addEventListener("resize", autoresize());
     return () => {
       window.removeEventListener("resize", autoresize);
@@ -229,13 +231,20 @@ function ReviewAndComment() {
         <div>
           {isUserLoggedIn ? (
             isEditingComment ? (
-              <button className="save_comment" type="submit">
+              <button
+                className="save_comment"
+                type="submit"
+                name="Save"
+                title="Save"
+              >
                 Save Comment
               </button>
             ) : (
               <button
-                className="add_comment bg-red-700"
+                className="add_comment"
                 onClick={handleAddComment}
+                title="Add Comment"
+                name="Add Comment"
               >
                 Add Comment
               </button>
@@ -282,12 +291,20 @@ function ReviewAndComment() {
                   {user.userId === value.userId && (
                     <span className="product__reviews_useraction">
                       <span>
-                        <button onClick={() => handleEdit(value._id)}>
+                        <button
+                          onClick={() => handleEdit(value._id)}
+                          name="Edit"
+                          title="Edit"
+                        >
                           <BiEdit className="text-gray-500" />
                         </button>
                       </span>
                       <span>
-                        <button onClick={() => handleDelete(value._id)}>
+                        <button
+                          onClick={() => handleDelete(value._id)}
+                          name="Delete"
+                          title="Delete"
+                        >
                           <AiOutlineDelete className="text-gray-500" />
                         </button>
                       </span>
@@ -337,4 +354,4 @@ function ReviewAndComment() {
   );
 }
 
-export default ReviewAndComment;
+
