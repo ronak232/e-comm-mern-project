@@ -8,6 +8,8 @@ import {
   handleDislikedReaction,
   handleLikedReaction,
 } from "../controller/userReaction.js";
+import { handleUserUploadImage } from "../controller/uploadImageController.js";
+import { imageUpload } from "../middleware/uploadfile.js";
 
 const routes = Router();
 
@@ -27,6 +29,15 @@ routes.patch("/api/comment/update/edit_comment/:id", handleEditComment);
 routes.patch("/api/comment/update/user_react/like/:id", handleLikedReaction);
 
 // dislike endpoint
-routes.patch("/api/comment/update/user_react/dislike/:id", handleDislikedReaction);
+routes.patch(
+  "/api/comment/update/user_react/dislike/:id",
+  handleDislikedReaction
+);
+
+routes.post(
+  "/api/images/:id/upload",
+  imageUpload.array("product_images", 2),
+  handleUserUploadImage
+);
 
 export default routes;

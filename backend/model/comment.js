@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 const CommentAndReview = new mongoose.Schema({
   productId: {
@@ -29,6 +29,13 @@ const CommentAndReview = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  product_images: [
+    {
+      secure_url: { type: mongoose.Schema.Types.String },
+      img_id: { type: mongoose.Schema.Types.String },
+      timestamp: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 export const UserComment = mongoose.model("user_comment", CommentAndReview);

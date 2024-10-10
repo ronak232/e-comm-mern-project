@@ -9,6 +9,11 @@ const app = express();
 
 const __dirname = path.resolve();
 
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -23,5 +28,5 @@ app.use(
 console.log(path.join(__dirname, "public/images"));
 
 app.listen(process.env.LOCAL_PORT || 8000, () => {
-  console.log("listening on 8001 success");
+  console.log("listening on 8000 success");
 });
