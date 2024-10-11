@@ -259,3 +259,7 @@ When this option is true, client errors such as a bad request or a request to a 
 Set this option to true so you can map multiple physical directories to the same web address or for routes to fill in non-existent files.
 
 Use false if you have mounted this middleware at a path designed to be strictly a single file system directory, which allows for short-circuiting 404s for less overhead. This middleware will also reply to all methods.
+
+
+
+cloudinary --- to save the images on server or cloud 

@@ -35,8 +35,8 @@ routes.patch(
 );
 
 routes.post(
-  "/api/images/:id/upload",
-  imageUpload.array("product_images", 2),
+  "/api/images/upload",
+  imageUpload.array("product_images", 3),
   handleUserUploadImage
 );
 

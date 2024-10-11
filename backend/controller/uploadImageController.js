@@ -5,7 +5,7 @@ import { UserComment } from "../model/comment.js";
 const handleUserUploadImage = async (req, res) => {
   const { id } = req.params;
 
-  const { productId, userId } = req.body;
+  const { productId, userName } = req.body;
   // if not file uploaded...
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ error: "No files uploaded" });
@@ -37,7 +37,7 @@ const handleUserUploadImage = async (req, res) => {
           productImage_url: cloudImage?.secure_url,
           id,
           productId,
-          userId,
+          userName,
         });
       })
       .catch((err) => {

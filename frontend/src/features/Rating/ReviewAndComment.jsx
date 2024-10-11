@@ -7,6 +7,7 @@ import { BiEdit } from "react-icons/bi";
 import { GrDislike, GrLike } from "react-icons/gr";
 import { AiOutlineDelete } from "react-icons/ai";
 import SkeletonCard from "../../Components/Skeleton";
+import ImageUpload from "./ImageUpload";
 
 export default function ReviewAndComment() {
   const [userComment, setUserComment] = useState("");
@@ -214,7 +215,9 @@ export default function ReviewAndComment() {
       <p className="product__reviews_title">Comments and Reviews</p>
       <h3>Write your comment</h3>
       <form
+        className="relative"
         onSubmit={(e) => (isEditingComment ? handleSave(e) : handleAddComment)}
+        encType="multipart/form-data"
       >
         <input
           className="product__reviews_textfield"
@@ -224,7 +227,8 @@ export default function ReviewAndComment() {
           onChange={(e) => setUserComment(e.target.value)}
           value={userComment}
           ref={ref}
-        ></input>
+        />
+        <ImageUpload />
         {inputError ? (
           <p className="empty-err">Please leave a comment 😔</p>
         ) : null}
@@ -353,5 +357,3 @@ export default function ReviewAndComment() {
     </div>
   );
 }
-
-

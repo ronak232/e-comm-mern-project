@@ -6,7 +6,6 @@ export const handleUploadToCloudinary = async (file, path) => {
     const { secure_url, public_id } = await cloudinary.uploader.upload(file, {
       resource_type: "auto", // Automatically detects the type (image/video)
       folder: path, // Store in the specified folder on Cloudinary
-      public_id: "product_images",
       quality_analysis: true,
     });
     cloudinary.url("product_images", {
