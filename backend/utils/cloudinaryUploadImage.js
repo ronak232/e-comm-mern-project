@@ -7,12 +7,9 @@ export const handleUploadToCloudinary = async (file, path) => {
       resource_type: "auto", // Automatically detects the type (image/video)
       folder: path, // Store in the specified folder on Cloudinary
       quality_analysis: true,
-    });
-    cloudinary.url("product_images", {
       transformation: [
-        { width: 1000, crop: "scale" },
-        { quality: "auto" },
-        { fetch_format: "auto" },
+        { width: 800, height: 600, crop: "fill" }, // Resize and crop to desired dimensions
+        { quality: "auto" }, // Automatically optimize quality
       ],
     });
 

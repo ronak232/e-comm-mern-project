@@ -8,7 +8,7 @@ import {
   handleDislikedReaction,
   handleLikedReaction,
 } from "../controller/userReaction.js";
-import { handleUserUploadImage } from "../controller/uploadImageController.js";
+import { handleUserUploadImage } from "../controller/cloudinary/uploadImageController.js";
 import { imageUpload } from "../middleware/uploadfile.js";
 
 const routes = Router();

@@ -65,7 +65,7 @@ export default function ReviewAndComment() {
     }
     setLoader(true);
     await axios
-      .post(`${baseURL}/api/comment/post_comment`, user)
+      .post(`/api/comment/post_comment`, user)
       .then((resp) => {
         setGetComments([...getUserComments, resp?.data]);
         setLoader(false);
@@ -186,7 +186,7 @@ export default function ReviewAndComment() {
     const fetchData = async () => {
       await axios
         .get(
-          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
+          `/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
         )
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
