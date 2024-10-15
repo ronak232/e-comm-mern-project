@@ -8,7 +8,6 @@ import uploadingImage from "../../Images/uploadImage.svg";
 function App() {
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [res, setRes] = useState({});
   const { id } = useParams();
 
   let options = {
@@ -27,7 +26,6 @@ function App() {
     userName: getAuth().currentUser?.displayName,
     createdAt: currDate,
   };
-  console.log(user);
 
   const handleSelectFile = (e) => {
     const selectedImages = e.target.files; // Access the selected files
@@ -89,22 +87,19 @@ function App() {
 
     await axios
       .post(`/api/images/upload`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
         onUploadProgress: (progressEvent) => {
-          setLoading();
+          setLoading(progressEvent * 100);
         },
       })
       .then((resp) => {
-        console.log(resp.data.secure_url);
+        console.log(resp.data);
         setLoading(false);
         setImageFile({
           img: resp.data.secure_url,
           img_id: resp.data.public_id,
         });
-        setRes(res.data);
         setImageFile({ previews: [], files: [] });
+        console.log(imageFile);
       })
       .catch((error) => {
         console.error(error.message);

@@ -1,10 +1,9 @@
 import { handleUploadToCloudinary } from "../../utils/cloudinaryUploadImage.js";
-import { CustomerProductUploadedImages } from "../../model/storeImages.js";
+import { UserComment } from "../../model/comment.js";
 
 // function to handle user uploaded images
 const handleUserUploadImage = async (req, res) => {
-  const { productId, userName, product_images } = req.body;
-  const _id = req.body._id; // For form data, req.body._id should have the value
+  const { _id, product_images, productId, userName } = req.body; // For form data, req.body._id should have the value
   console.log("_id received:", _id);
   // if not file uploaded...
   if (!req.files || req.files.length === 0) {
@@ -33,23 +32,58 @@ const handleUserUploadImage = async (req, res) => {
       })
       .toString();
   }
-
   try {
-    const customerImageSchema = CustomerProductUploadedImages.findByIdAndUpdate(
-      _id,
-      {
-        $push: {
+    let userImg = await UserComment.findById(_id);
+    if (!userImg) {
+      let userUploadedImg = new UserComment({
+        _id,
+        productId,
+        userName,
+        product_images: uploadedImages.map((image) => ({
+          secure_url: image.secure_url, // Assign the URL directly
+          img_id: image.img_id, // Assign the img_id as a string directly
+        })),
+      });
+      await userUploadedImg.save();
+      return res.status(201).json({
+        success: true,
+        message: "User created and images uploaded successfully",
+        data: userUploadedImg,
+      });
+    } else {
+      const uploadImage = await UserComment.findByIdAndUpdate(
+        _id,
+        {
           //to ensure that the first element in the product_images array is updated i.e. secure_url array inside the first element of product_images is updated.
-          "product_images.0.secure_url": {
-            $each: uploadedImages.map((image) => image.secure_url),
-          }, // Add URLs to the existing array
+          $push: {
+            product_images: {
+              $each: uploadedImages.map((image) => ({
+                secure_url: image.secure_url, // Push each URL directly
+                img_id: image.img_id, // Push each img_id directly as a string
+              })),
+            },
+          },
         },
-      },
-      {
-        new: true,
-      }
-    );
-    const saveImages = await customerImageSchema.save()
+        {
+          new: true,
+        }
+      )
+
+        .then(() => {
+          res.status(200).json({
+            success: "true",
+            mssg: "Successfully uploaded",
+            data: uploadImage,
+          });
+        })
+        .catch((err) => {
+          console.log("Upload file Error ", err);
+          res
+            .status(400)
+            .json({ error: "Upload failed", details: err.message });
+        });
+      console.log("Final", uploadedImages);
+    }
   } catch (error) {
     console.error("Error in update:", error);
     res
