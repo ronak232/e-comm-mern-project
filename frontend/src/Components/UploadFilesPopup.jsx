@@ -59,7 +59,7 @@ export const UploadFilesPopup = (props) => {
           <p className="text-[12px] text-gray-950">
             To upload images click upload image buttom
           </p>
-          {loading ? (
+          {/* {loading ? (
             <div className="h-full w-full">
               <img
                 className="max-w-12 max-h-12"
@@ -67,7 +67,7 @@ export const UploadFilesPopup = (props) => {
                 alt="loading"
               />
             </div>
-          ) : null}
+          ) : null} */}
           <button
             onClick={props.handleUpload}
             className="bg-black p-2 rounded-md font-medium text-white text-[14px]"
