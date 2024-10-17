@@ -10,6 +10,7 @@ import {
 } from "../controller/userReaction.js";
 import { handleUserUploadImage } from "../controller/cloudinary/uploadImageController.js";
 import { imageUpload } from "../middleware/uploadfile.js";
+import { getUserCloudImages } from "../controller/cloudinary/getCloudinaryImages.js";
 
 const routes = Router();
 
@@ -33,6 +34,10 @@ routes.patch(
   "/api/comment/update/user_react/dislike/:id",
   handleDislikedReaction
 );
+
+//get Images
+
+routes.get("/api/images/fetchimages/:productId", getUserCloudImages);
 
 routes.post(
   "/api/images/upload",

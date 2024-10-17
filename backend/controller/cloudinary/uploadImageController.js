@@ -1,10 +1,10 @@
 import { handleUploadToCloudinary } from "../../utils/cloudinaryUploadImage.js";
-import { UserComment } from "../../model/comment.js";
+import { UploadedImgs } from "../../model/store_images.js";
 
 // function to handle user uploaded images
 const handleUserUploadImage = async (req, res) => {
-  const { _id, product_images, productId, userName } = req.body; // For form data, req.body._id should have the value
-  console.log("_id received:", _id);
+  const { userId, productId, userName } = req.body;
+  // const uploadedImages = req.body.uploadedImages; // Assuming images are sent in the request
   // if not file uploaded...
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ error: "No files uploaded" });
@@ -33,56 +33,65 @@ const handleUserUploadImage = async (req, res) => {
       .toString();
   }
   try {
-    let userImg = await UserComment.findById(_id);
-    if (!userImg) {
-      let userUploadedImg = new UserComment({
-        _id,
-        productId,
-        userName,
-        product_images: uploadedImages.map((image) => ({
-          secure_url: image.secure_url, // Assign the URL directly
-          img_id: image.img_id, // Assign the img_id as a string directly
-        })),
-      });
-      await userUploadedImg.save();
-      return res.status(201).json({
-        success: true,
-        message: "User created and images uploaded successfully",
-        data: userUploadedImg,
-      });
-    } else {
-      const uploadImage = await UserComment.findByIdAndUpdate(
-        _id,
+    // Check if user already exists in the database
+    const user = await UploadedImgs.findOne({ userId });
+
+    if (user) {
+      // If user exists, push the image URL to the existing user's product_images array
+      await UploadedImgs.findByIdAndUpdate(
+        user._id,
         {
-          //to ensure that the first element in the product_images array is updated i.e. secure_url array inside the first element of product_images is updated.
           $push: {
             product_images: {
               $each: uploadedImages.map((image) => ({
-                secure_url: image.secure_url, // Push each URL directly
-                img_id: image.img_id, // Push each img_id directly as a string
+                secure_url: image.secure_url,
+                img_id: image.img_id,
               })),
             },
           },
         },
-        {
-          new: true,
-        }
+        { new: true }
       )
-
-        .then(() => {
+        .then((updatedUser) => {
           res.status(200).json({
-            success: "true",
-            mssg: "Successfully uploaded",
-            data: uploadImage,
+            success: true,
+            message: "Image URLs added to existing user",
+            data: updatedUser,
           });
         })
         .catch((err) => {
-          console.log("Upload file Error ", err);
+          console.error("Error updating user: ", err);
           res
-            .status(400)
-            .json({ error: "Upload failed", details: err.message });
+            .status(500)
+            .json({ error: "Failed to update user", details: err.message });
         });
-      console.log("Final", uploadedImages);
+    } else {
+      // If user doesn't exist, create a new user document and add the image URL
+      const newUser = new UploadedImgs({
+        userId,
+        userName,
+        productId,
+        product_images: uploadedImages.map((image) => ({
+          secure_url: image.secure_url,
+          img_id: image.img_id,
+        })),
+      });
+
+      await newUser
+        .save()
+        .then((savedUser) => {
+          res.status(201).json({
+            success: true,
+            message: "New user created and image URLs saved",
+            data: savedUser,
+          });
+        })
+        .catch((err) => {
+          console.error("Error creating new user: ", err);
+          res
+            .status(500)
+            .json({ error: "Failed to create new user", details: err.message });
+        });
     }
   } catch (error) {
     console.error("Error in update:", error);

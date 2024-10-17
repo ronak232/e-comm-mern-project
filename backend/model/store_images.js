@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const CommentAndReview = new mongoose.Schema({
+const UserUploadedImgs = new mongoose.Schema({
   productId: {
     type: String,
     ref: "Product",
@@ -12,22 +12,28 @@ const CommentAndReview = new mongoose.Schema({
   },
   userName: {
     type: String,
-    ref: "UserName",
+    ref: "User",
   },
-  commentText: { type: String, required: false },
-  emojis: [String],
   likes: { type: Number, default: 0 },
   dislikes: { type: Number, default: 0 },
-  createdAt: {
+  postDate: {
     type: String,
   },
   editedAt: Date,
   flagged: { type: Boolean, default: false },
-  replied_comment_id: { String },
   timestamp: {
     type: Date,
     default: Date.now,
   },
+  product_images: [
+    {
+      secure_url: { type: [String] },
+      img_id: String,
+    },
+  ],
 });
 
-export const UserComment = mongoose.model("user_comment", CommentAndReview);
+export const UploadedImgs = mongoose.model(
+  "useruploadedimges",
+  UserUploadedImgs
+);

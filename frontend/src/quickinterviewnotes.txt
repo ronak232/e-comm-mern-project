@@ -1,0 +1,137 @@
+for react query hook ---> (useQuery) 
+
+### React Query: Quick Notes for Interview Revision
+
+**React Query** is a powerful library that simplifies data fetching, caching, and synchronization, making React applications more efficient and responsive. Here’s a breakdown of its key features with examples:
+
+
+### Key Parameters of `useQuery`
+
+1. **queryKey (required)**: A unique identifier for your query (string or array). It helps React Query manage caching and refetching efficiently.
+
+2. **queryFn (required)**: The async function that fetches your data, returning the results.
+
+Example:
+```js
+useQuery(['posts', userId], fetchPosts);
+```
+
+---
+Return Values---->
+3. useQuery gives back an object with helpful info:
+
+status: Tells you if it's loading, if there was an error, or if it's successful
+error: Any errors that happened
+data: The data you fetched
+isFetching: True if it's currently fetching data
+
+
+#### 1. **Easy Data Fetching**
+With `useQuery`, data fetching becomes super simple. It automatically handles fetching, caching, and updating the state.
+
+**Example:**
+```js
+import { useQuery } from 'react-query';
+
+const fetchPosts = async () => {
+  const res = await fetch('/api/posts');
+  return res.json();
+};
+
+function Posts() {
+  const { data, error, isLoading } = useQuery('posts', fetchPosts);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error occurred: {error.message}</p>;
+
+  return (
+    <div>
+      {data.map(post => (
+        <div key={post.id}>{post.title}</div>
+      ))}
+    </div>
+  );
+}
+```
+- The query key (`'posts'`) and the fetch function (`fetchPosts`) are provided to `useQuery`.
+
+---
+
+#### 2. **Automatic Caching**
+React Query caches fetched data automatically, reducing load times and server requests on subsequent renders.
+
+- Cached data is reused if the same query is requested again.
+- By default, the cache remains for 5 minutes.
+
+**Example:**
+```js
+const { data, isLoading } = useQuery('posts', fetchPosts, {
+  staleTime: 300000, // 5 minutes
+});
+```
+- `staleTime`: defines how long data is considered "fresh" before React Query refetches it.
+
+---
+
+#### 3. **Background Updates**
+React Query can refetch data in the background, ensuring the app stays up-to-date without user intervention.
+
+**Example:**
+```js
+useQuery('posts', fetchPosts, {
+  refetchOnWindowFocus: true, // Refetches data when the window regains focus
+});
+```
+- `refetchOnWindowFocus`: automatically refetches data when the user switches back to the app.
+
+---
+
+#### 4. **Error Handling**
+React Query manages errors seamlessly and can retry fetching data if a request fails.
+
+**Example:**
+```js
+useQuery('posts', fetchPosts, {
+  retry: 3, // Retries failed requests 3 times before showing an error
+  onError: (error) => {
+    console.error('Error fetching posts:', error);
+  },
+});
+```
+- `retry`: specifies how many times React Query should retry the failed request.
+
+---
+
+#### 5. **Developer Tools**
+React Query provides excellent dev tools to monitor and debug queries in real-time.
+
+- Install `react-query-devtools` to visualize query states, cache, and more.
+
+**Example:**
+```js
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+function App() {
+  return (
+    <>
+      <Posts />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </>
+  );
+}
+```
+
+---
+
+### Summary
+- **Data Fetching**: Simplifies API requests with a single hook.
+- **Caching**: Automatically stores and reuses data, reducing server load.
+- **Background Sync**: Keeps your app’s data fresh in the background.
+- **Error Handling**: Gracefully handles and retries failed requests.
+- **Dev Tools**: Powerful developer tools for monitoring queries.
+
+With these features, React Query optimizes performance and ensures a smooth user experience by reducing redundant data fetching and improving responsiveness.
+
+
+tip ---> 
+When you use await, you should not also use .then() on the same variable since await will resolve the promise directly.

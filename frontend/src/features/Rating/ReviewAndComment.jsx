@@ -8,6 +8,8 @@ import { GrDislike, GrLike } from "react-icons/gr";
 import { AiOutlineDelete } from "react-icons/ai";
 import SkeletonCard from "../../Components/Skeleton";
 import ImageUpload from "./ImageUpload";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { useModal } from "../../hooks/context/useModal";
 
 export default function ReviewAndComment() {
   const [userComment, setUserComment] = useState("");
@@ -24,6 +26,8 @@ export default function ReviewAndComment() {
   const { id } = useParams();
   const ref = useRef(null);
   const baseURL = process.env.REACT_APP_BASE_URL;
+
+  const { openModal } = useModal();
 
   let options = {
     weekday: "short",
@@ -185,9 +189,7 @@ export default function ReviewAndComment() {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(
-          `/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
-        )
+        .get(`/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
@@ -215,10 +217,21 @@ export default function ReviewAndComment() {
       <p className="product__reviews_title">Comments and Reviews</p>
       <h3>Write your comment</h3>
       <form
-        className="relative"
+        className="relative flex flex-col gap-2"
         onSubmit={(e) => (isEditingComment ? handleSave(e) : handleAddComment)}
-        encType="multipart/form-data"
       >
+        <div className="flex items-center p-2 absolute top-10 right-0">
+          {isUserLoggedIn && (
+            <button
+              className="bg-transparent p-0"
+              title="upload image"
+              onClick={openModal}
+              type="button"
+            >
+              <FaCloudUploadAlt className="text-xl text-green-400" />
+            </button>
+          )}
+        </div>
         <input
           className="product__reviews_textfield"
           name="product_reviews"
@@ -228,11 +241,10 @@ export default function ReviewAndComment() {
           value={userComment}
           ref={ref}
         />
-        <ImageUpload />
         {inputError ? (
           <p className="empty-err">Please leave a comment 😔</p>
         ) : null}
-        <div>
+        <div className="">
           {isUserLoggedIn ? (
             isEditingComment ? (
               <button
@@ -263,6 +275,7 @@ export default function ReviewAndComment() {
           )}
         </div>
       </form>
+        <ImageUpload />
       <ul className="product__reviews_list">
         {loader ? (
           // Show skeleton loader when loading is true

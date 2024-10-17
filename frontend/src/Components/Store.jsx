@@ -1,5 +1,5 @@
 import React from "react";
-import data from "../Json/data.json";
+import data from "../mock-json/data.json";
 import { RiArrowUpSLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
