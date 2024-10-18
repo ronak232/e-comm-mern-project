@@ -10,6 +10,8 @@ function ImageUpload() {
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
 
+  let cldUrl = process.env.CLOUDINARY_URL;
+
   let options = {
     weekday: "short",
     year: "numeric",
@@ -29,7 +31,6 @@ function ImageUpload() {
 
   const handleSelectFile = (e) => {
     const selectedImages = e.target.files; // Access the selected files
-    console.log("Selected Images - ", selectedImages);
     let uploadedFiles = []; // To store the base64 previews
     let actualFiles = []; // To store actual file objects
 
@@ -39,7 +40,6 @@ function ImageUpload() {
         // On file load, store the base64 preview
         reader.onload = () => {
           uploadedFiles.push(reader.result); // Store base64 for preview
-          console.log("Preview image base64: ", reader.result);
 
           // After all files are processed, update the state
           if (uploadedFiles.length === selectedImages.length) {
@@ -57,20 +57,18 @@ function ImageUpload() {
         actualFiles.push(selectedImages[i]); // Store actual file object
       }
     }
-    console.log(actualFiles);
   };
 
   // react-query fetch request
   const fetchUploadedImages = async () => {
-    const resp = await axios.get(`/api/images/fetchimages/${user.productId}`);
+    const resp = await axios.get(
+      `/api/images/fetchimages/images=${user.productId}`
+    );
     return resp.data.data;
   };
 
   // react-query
-  const { data: resp} = useQuery(
-    "uploadedImages",
-    fetchUploadedImages
-  );
+  const { data: resp } = useQuery("uploadedImages", fetchUploadedImages);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -79,14 +77,13 @@ function ImageUpload() {
 
     const data = new FormData();
     data.append("productId", user.productId);
-    data.append("userNname", user.userName);
+    data.append("userName", user.userName);
     data.append("userId", user.userId);
     data.append("postDate", currDate);
     // Loop through the stored files and append them to the FormData
 
     // Check if there are actual files to upload
     if (!imageFile.files || imageFile.files.length === 0) {
-      console.log("No file selected");
       setLoading(false);
       return;
     }
@@ -96,8 +93,6 @@ function ImageUpload() {
       data.append("product_images", file); // Append actual file object
     });
 
-    console.log("Imagess....", imageFile);
-
     await axios
       .post(`/api/images/upload`, data, {
         onUploadProgress: (progressEvent) => {
@@ -105,14 +100,12 @@ function ImageUpload() {
         },
       })
       .then((resp) => {
-        console.log(resp.data);
         setLoading(false);
         setImageFile({
           img: resp.data.secure_url,
           img_id: resp.data.public_id,
         });
         setImageFile({ previews: [], files: [] });
-        console.log(imageFile);
       })
       .catch((error) => {
         console.error(error.message);
@@ -121,30 +114,29 @@ function ImageUpload() {
 
   return (
     <>
-      <div className="w-full flex flex-col ">
-        {resp?.map((item) => {
-          return (
-            <div
-              className="flex flex-col h-[160px] max-h-[100%] min-h-[160px] img_silder"
-              key={item._id}
-            >
-              {
-                <div className="flex overflow-x-scroll w-full pt-2 pb-2 gap-3 border-2 border-cyan-600">
-                  {item.product_images?.map((item) => {
-                    return (
-                      <img
-                        className="w-full"
-                        src={item.secure_url}
-                        alt="uploaded_imgs"
-                        key={item.img_id}
-                      />
-                    );
-                  })}
-                </div>
-              }
-            </div>
-          );
+      <div className="w-full flex gap-2 overflow-x-scroll">
+        {/* flatMap helps combine all images into a single, continuous list so that they can be rendered in one container */}
+        {resp?.flatMap(({ product_images, userName }) => {
+          return product_images?.map((item) => {
+            return (
+              <div
+                className="flex relative border-gray-200 cursor-pointer max-w-[140px] max-h-[120px] user_images"
+                key={item._id}
+              >
+                <span className="overlay h-full w-full text-[12px]">
+                  {userName}
+                </span>
+                <img
+                  className="w-full"
+                  src={item.secure_url}
+                  alt="uploaded_imgs"
+                  key={item.img_id}
+                />
+              </div>
+            );
+          });
         })}
+
         {/* Popup on select images... */}
         <UploadFilesPopup
           handleSelectFile={handleSelectFile}

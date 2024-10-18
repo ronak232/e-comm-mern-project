@@ -37,7 +37,7 @@ routes.patch(
 
 //get Images
 
-routes.get("/api/images/fetchimages/:productId", getUserCloudImages);
+routes.get("/api/images/fetchimages/images=:productId", getUserCloudImages);
 
 routes.post(
   "/api/images/upload",

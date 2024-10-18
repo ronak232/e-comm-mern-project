@@ -28,7 +28,7 @@ export const UploadFilesPopup = (props) => {
             alt=""
           />
 
-          <div className="flex flex-col items-center justify-center gap-2 text-[16px] text-md bg-cyan-400 rounded-md p-2 w-full h-[140px]">
+          <div className="flex flex-col items-center justify-center gap-2 text-[16px] text-md bg-green-300 rounded-md p-2 w-full h-[140px]">
             <input
               type="file"
               id="file"

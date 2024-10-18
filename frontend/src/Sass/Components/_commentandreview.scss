@@ -184,6 +184,26 @@
   font-weight: 500;
 }
 
+.overlay {
+  background: white;
+  position: absolute;
+  opacity: 0;
+  -webkit-transition: background-color 0.5s ease-in, opacity 0.5s ease-in;
+  transition: background-color 0.5s ease-in, opacity 0.5s ease-in;
+  padding-left: 4px;
+  font-family: $openSans;
+  color: #ffffff;
+  line-height: 9rem;
+  display: inline-block;
+}
+
+.user_images:hover .overlay {
+  background-color: rgba(51, 51, 51, 0.473);
+  opacity: 1;
+  -webkit-transition: background-color 0.5s ease-in, opacity 0.5s ease-in;
+  transition: background-color 0.5s ease-in, opacity 0.5s ease-in;
+}
+
 .upload_image {
-  background: #66666667;
+  background: rgb(24 24 24 / 69%);
 }

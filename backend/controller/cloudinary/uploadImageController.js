@@ -34,7 +34,7 @@ const handleUserUploadImage = async (req, res) => {
   }
   try {
     // Check if user already exists in the database
-    const user = await UploadedImgs.findOne({ userId });
+    const user = await UploadedImgs.findOne({ productId, userName });
 
     if (user) {
       // If user exists, push the image URL to the existing user's product_images array

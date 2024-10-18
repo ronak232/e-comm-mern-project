@@ -2,9 +2,8 @@ import { UploadedImgs } from "../../model/store_images.js";
 
 export const getUserCloudImages = (req, res) => {
   const { productId } = req.params;
-  const { userName } = req.body;
 
-  const uploadedImage = UploadedImgs.find({ productId, userName });
+  const uploadedImage = UploadedImgs.find({ productId });
   uploadedImage
     .then((resp) => {
       console.log(resp);
