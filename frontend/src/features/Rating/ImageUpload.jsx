@@ -10,6 +10,7 @@ function ImageUpload() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState({ prog: 0 });
   const { id } = useParams();
+  const baseURL = process.env.REACT_APP_BASE_URL;
 
   let options = {
     weekday: "short",
@@ -61,7 +62,7 @@ function ImageUpload() {
   // react-query fetch request
   const fetchUploadedImages = async () => {
     const resp = await axios.get(
-      `/api/images/fetchimages/images=${user.productId}`
+      `${baseURL}/api/images/fetchimages/images=${user.productId}`
     );
     return resp.data.data;
   };
