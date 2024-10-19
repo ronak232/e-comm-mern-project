@@ -25,6 +25,7 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^6.4.5",
     "react-scripts": "^5.0.1",
+    "react-toastify": "^10.0.6",
     "stream-browserify": "^3.0.0",
     "styled-components": "^5.3.6",
     "swiper": "^11.0.5",

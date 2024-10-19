@@ -8,9 +8,8 @@ import { UploadFilesPopup } from "../../Components/UploadFilesPopup";
 function ImageUpload() {
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState({ prog: 0 });
   const { id } = useParams();
-
-  let cldUrl = process.env.CLOUDINARY_URL;
 
   let options = {
     weekday: "short",
@@ -68,7 +67,10 @@ function ImageUpload() {
   };
 
   // react-query
-  const { data: resp } = useQuery("uploadedImages", fetchUploadedImages);
+  const { data: resp, isLoading } = useQuery(
+    "uploadedImages",
+    fetchUploadedImages
+  );
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -96,15 +98,19 @@ function ImageUpload() {
     await axios
       .post(`/api/images/upload`, data, {
         onUploadProgress: (progressEvent) => {
-          setLoading(progressEvent * 100);
+          setProgress((progressState) => {
+            if (!loading) {
+              return { ...progressState, prog: progressEvent.progress * 100 }; // keep track whenever component rerender upon file uploading
+            }
+          });
         },
       })
       .then((resp) => {
-        setLoading(false);
         setImageFile({
           img: resp.data.secure_url,
           img_id: resp.data.public_id,
         });
+        setLoading(false);
         setImageFile({ previews: [], files: [] });
       })
       .catch((error) => {
@@ -114,35 +120,41 @@ function ImageUpload() {
 
   return (
     <>
-      <div className="w-full flex gap-2 overflow-x-scroll">
-        {/* flatMap helps combine all images into a single, continuous list so that they can be rendered in one container */}
-        {resp?.flatMap(({ product_images, userName }) => {
-          return product_images?.map((item) => {
-            return (
-              <div
-                className="flex relative border-gray-200 cursor-pointer max-w-[140px] max-h-[120px] user_images"
-                key={item._id}
-              >
-                <span className="overlay h-full w-full text-[12px]">
-                  {userName}
-                </span>
-                <img
-                  className="w-full"
-                  src={item.secure_url}
-                  alt="uploaded_imgs"
-                  key={item.img_id}
-                />
-              </div>
-            );
-          });
-        })}
+      {/* {resp?.length > 0 && ( */}
+      <div className="block w-full max-w-[440px]">
+        <div className="w-full flex gap-2 p-3 overflow-x-scroll">
+          {/* flatMap helps combine all images into a single, continuous list so that they can be rendered in one container */}
+          {!isLoading &&
+            resp?.flatMap(({ product_images, userName }) => {
+              return product_images?.map((item) => {
+                return (
+                  <div
+                    className="flex relative cursor-pointer h-full user_images"
+                    key={item._id}
+                  >
+                    <span className="overlay w-full h-full max-w-[140px] max-h-[130px] text-[12px]">
+                      {userName}
+                    </span>
+                    <span
+                      className="w-full images-by-user"
+                      key={item.img_id}
+                      style={{ backgroundImage: `url(${item.secure_url})` }}
+                    ></span>
+                  </div>
+                );
+              });
+            })}
 
-        {/* Popup on select images... */}
-        <UploadFilesPopup
-          handleSelectFile={handleSelectFile}
-          handleUpload={handleUpload}
-        />
+          {/* Popup on select images... */}
+          <UploadFilesPopup
+            handleSelectFile={handleSelectFile}
+            handleUpload={handleUpload}
+            loading={loading}
+            progress={progress}
+          />
+        </div>
       </div>
+      {/* )} */}
     </>
   );
 }

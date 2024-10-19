@@ -189,7 +189,9 @@ export default function ReviewAndComment() {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(`${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
+        .get(
+          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
+        )
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
@@ -220,7 +222,10 @@ export default function ReviewAndComment() {
         className="relative flex flex-col gap-2"
         onSubmit={(e) => (isEditingComment ? handleSave(e) : handleAddComment)}
       >
-        <div className="flex items-center p-2 absolute top-10 right-0">
+        <div
+          className="flex items-center p-2 absolute top-10 right-0"
+         
+        >
           {isUserLoggedIn && (
             <button
               className="bg-transparent p-0"
@@ -275,7 +280,7 @@ export default function ReviewAndComment() {
           )}
         </div>
       </form>
-        <ImageUpload />
+      <ImageUpload />
       <ul className="product__reviews_list">
         {loader ? (
           // Show skeleton loader when loading is true

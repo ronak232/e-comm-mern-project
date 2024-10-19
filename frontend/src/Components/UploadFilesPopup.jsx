@@ -1,21 +1,21 @@
 import { FaWindowClose } from "react-icons/fa";
-import uploadingImage from "../Images/uploadLoading.svg";
-import banner from "../Images/banner-upload.svg";
+import banner from "../Images/banner-upload.png";
 import browseImages from "../Images/browse-icon.svg";
-import { useState } from "react";
 import { useModal } from "../hooks/context/useModal";
 
 export const UploadFilesPopup = (props) => {
-  const [loading, setLoading] = useState(true);
-
-  const { isModalOpen, closeModal } = useModal(); // Access modal state and close function
+  const { isModalOpen, closeModal, modalRef, modalTop } = useModal(); // Access modal state and close function
 
   if (!isModalOpen) return null; // Do not render the modal if it's not open
 
   return (
-    <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center w-full h-full upload_image z-[1000] p-3">
-      <div className="flex content-center justify-center items-center w-full">
-        <div className="relative flex flex-col items-center gap-2 rounded-md min-h-[100px] md:min-w-[450px] min-w-[100%] bg-white p-3">
+    <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center w-full h-full upload_image z-[1000]">
+      <div className="flex content-center justify-center items-center w-full rounded-md">
+        <div
+          className="relative flex flex-col items-center min-h-[100px] md:min-w-[450px] min-w-[100%] bg-white p-2 rounded-md"
+          ref={modalRef}
+          style={{ top: modalTop }}
+        >
           <button
             className="bg-transparent absolute right-0 text-xl"
             onClick={closeModal}
@@ -23,12 +23,12 @@ export const UploadFilesPopup = (props) => {
             <FaWindowClose />
           </button>
           <img
-            className="banner-img max-h-[220px] w-full"
+            className="banner-img max-h-[220px] w-full rounded-md"
             src={banner}
             alt=""
           />
 
-          <div className="flex flex-col items-center justify-center gap-2 text-[16px] text-md bg-green-300 rounded-md p-2 w-full h-[140px]">
+          <div className="flex flex-col items-center justify-center gap-2 text-[16px] text-md bg-white p-2 w-full h-[140px]">
             <input
               type="file"
               id="file"
@@ -54,26 +54,27 @@ export const UploadFilesPopup = (props) => {
                 Browse
               </span>
             </label>
-          </div>
 
-          <p className="text-[12px] text-gray-950">
-            To upload images click upload image buttom
-          </p>
-          {/* {loading ? (
-            <div className="h-full w-full">
-              <img
-                className="max-w-12 max-h-12"
-                src={uploadingImage}
-                alt="loading"
-              />
-            </div>
-          ) : null} */}
-          <button
-            onClick={props.handleUpload}
-            className="bg-black p-2 rounded-md font-medium text-white text-[14px]"
-          >
-            Upload Image
-          </button>
+            <p className="text-[12px] text-gray-950">
+              To upload images click upload image buttom
+            </p>
+            {props.loading && (
+              <div className="h-full w-full rounded-md">
+                <p className="text-black text-center">Uploading...</p>
+                <progress
+                  className="text-blue-500 w-full h-2 bg-gray-300"
+                  max="100"
+                  value={props.progress?.prog}
+                ></progress>
+              </div>
+            )}
+            <button
+              onClick={props.handleUpload}
+              className="bg-black p-2 rounded-md font-medium text-white text-[14px]"
+            >
+              Upload Image
+            </button>
+          </div>
         </div>
       </div>
     </div>

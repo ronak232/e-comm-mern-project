@@ -5,18 +5,24 @@
   margin-top: auto;
 
   &-container {
-    @include container(flex, space-around, center);
+    @include container(flex, space-around, start);
     flex-direction: column;
     gap: 30px;
+
     @include devices(tablet) {
       flex-direction: row;
     }
+  }
+
+  .logo {
+    width: 100%;
   }
 
   &-connect {
     padding: 0;
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     @include devices(tablet) {
       padding: 0 16px;

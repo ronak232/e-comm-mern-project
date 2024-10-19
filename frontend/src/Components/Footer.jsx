@@ -7,8 +7,7 @@ function Footer() {
     <footer>
       <div className="footer">
         <div className="footer-container">
-          <div>
-            <div></div>
+          <div className="logo">
             <a href="/" className="wondoserscap-logo">
               <img src={logo} alt="" />
             </a>

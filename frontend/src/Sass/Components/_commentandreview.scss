@@ -184,6 +184,15 @@
   font-weight: 500;
 }
 
+.images-by-user {
+  width: 140px;
+  height: 129px;
+  border-radius: 2px;
+  background-position: 50%, 50%;
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, 20%;
+}
+
 .overlay {
   background: white;
   position: absolute;
@@ -206,4 +215,11 @@
 
 .upload_image {
   background: rgb(24 24 24 / 69%);
+}
+
+.loading_image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
