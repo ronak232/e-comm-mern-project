@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { useQuery } from "react-query";
 import { UploadFilesPopup } from "../../Components/UploadFilesPopup";
+import { generativeAIContent } from "../../utils/GeminiAPI/genAI";
 
 function ImageUpload() {
   const [imageFile, setImageFile] = useState(null);
@@ -11,6 +12,16 @@ function ImageUpload() {
   const [progress, setProgress] = useState({ prog: 0 });
   const { id } = useParams();
   const baseURL = process.env.REACT_APP_BASE_URL;
+
+  console.log(
+    generativeAIContent()
+      .then((resp) => {
+        console.log(resp);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      })
+  );
 
   let options = {
     weekday: "short",
@@ -97,7 +108,7 @@ function ImageUpload() {
     });
 
     await axios
-      .post(`/api/images/upload`, data, {
+      .post(`${baseURL}/api/images/upload`, data, {
         onUploadProgress: (progressEvent) => {
           setProgress((progressState) => {
             if (!loading) {
@@ -122,7 +133,7 @@ function ImageUpload() {
   return (
     <>
       {/* {resp?.length > 0 && ( */}
-      <div className="block w-full max-w-[440px]">
+      <div className="block w-full max-w-[430px]">
         <div className="w-full flex gap-2 p-3 overflow-x-scroll">
           {/* flatMap helps combine all images into a single, continuous list so that they can be rendered in one container */}
           {!isLoading &&

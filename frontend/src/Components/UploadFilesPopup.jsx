@@ -50,9 +50,9 @@ export const UploadFilesPopup = (props) => {
                 alt=""
               />
               Click here to upload image/video
-              <span className="bg-white max-w-[80px] p-2 rounded-md font-semibold text-blue-800">
+              <button className="browse_btn max-w-[80px] p-2 rounded-md">
                 Browse
-              </span>
+              </button>
             </label>
 
             <p className="text-[12px] text-gray-950">
@@ -61,6 +61,7 @@ export const UploadFilesPopup = (props) => {
             {props.loading && (
               <div className="h-full w-full rounded-md">
                 <p className="text-black text-center">Uploading...</p>
+                <h1 className="text-black text-md">{props.progress?.prog}</h1>
                 <progress
                   className="text-blue-500 w-full h-2 bg-gray-300"
                   max="100"
@@ -70,7 +71,7 @@ export const UploadFilesPopup = (props) => {
             )}
             <button
               onClick={props.handleUpload}
-              className="bg-black p-2 rounded-md font-medium text-white text-[14px]"
+              className="upload_image_btn p-2 rounded-md text-white text-[14px]"
             >
               Upload Image
             </button>
