@@ -11,6 +11,10 @@ import {
 import { handleUserUploadImage } from "../controller/cloudinary/uploadImageController.js";
 import { imageUpload } from "../middleware/uploadfile.js";
 import { getUserCloudImages } from "../controller/cloudinary/getCloudinaryImages.js";
+import {
+  handleDislikedImage,
+  handleLikedImage,
+} from "../controller/cloudinary/imageIxpression.js";
 
 const routes = Router();
 
@@ -44,5 +48,8 @@ routes.post(
   imageUpload.array("product_images", 3),
   handleUserUploadImage
 );
+
+routes.post("/api/images/upload/:id/likes/post", handleLikedImage);
+routes.post("/api/images/upload/:id/dislikes/post", handleDislikedImage);
 
 export default routes;

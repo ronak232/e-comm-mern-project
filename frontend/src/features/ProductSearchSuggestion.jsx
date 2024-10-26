@@ -8,7 +8,7 @@ function ProductSearchSuggestion({ data, querySearch }) {
   const [loading, setLoading] = useState(false);
   const suggestionRef = useRef(null);
 
-  const debounceSearch = useDebounce(querySearch, 500); // 500ms debounce delay
+  const debounceSearch = useDebounce(querySearch, 350); // 500ms debounce delay
 
   useEffect(() => {
     if (debounceSearch) {

@@ -3,8 +3,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { useQuery } from "react-query";
+import { GrDislike, GrLike } from "react-icons/gr";
 import { UploadFilesPopup } from "../../Components/UploadFilesPopup";
-import { generativeAIContent } from "../../utils/GeminiAPI/genAI";
 
 function ImageUpload() {
   const [imageFile, setImageFile] = useState(null);
@@ -12,16 +12,6 @@ function ImageUpload() {
   const [progress, setProgress] = useState({ prog: 0 });
   const { id } = useParams();
   const baseURL = process.env.REACT_APP_BASE_URL;
-
-  console.log(
-    generativeAIContent()
-      .then((resp) => {
-        console.log(resp);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      })
-  );
 
   let options = {
     weekday: "short",
@@ -83,7 +73,6 @@ function ImageUpload() {
     "uploadedImages",
     fetchUploadedImages
   );
-
   const handleUpload = async (e) => {
     e.preventDefault();
 
@@ -130,28 +119,70 @@ function ImageUpload() {
       });
   };
 
+  const handleLikeImage = async (id) => {
+    await axios
+      .post(`${baseURL}/api/images/upload/${id}/likes/post`, { imageId: id })
+      .then((resp) => {
+        console.log(resp.data);
+        return resp.data.data;
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+  };
+
+  const handleDisLikeImage = async (id) => {
+    await axios
+      .post(`${baseURL}/api/images/upload/${id}/dislikes/post`, { imageId: id })
+      .then((res) => {
+        return res.data.data;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <>
       {/* {resp?.length > 0 && ( */}
       <div className="block w-full max-w-[430px]">
-        <div className="w-full flex gap-2 p-3 overflow-x-scroll">
+        <div className="w-full flex gap-2 p-3 overflow-x-scroll overflow-y-hidden">
           {/* flatMap helps combine all images into a single, continuous list so that they can be rendered in one container */}
           {!isLoading &&
             resp?.flatMap(({ product_images, userName }) => {
               return product_images?.map((item) => {
                 return (
                   <div
-                    className="flex relative cursor-pointer h-full user_images"
+                    className="flex flex-col relative cursor-pointer h-full user_uploaded gap-2"
                     key={item._id}
                   >
                     <span className="overlay w-full h-full max-w-[140px] max-h-[130px] text-[12px]">
                       {userName}
                     </span>
-                    <span
+                    <img
                       className="w-full images-by-user"
                       key={item.img_id}
-                      style={{ backgroundImage: `url(${item.secure_url})` }}
-                    ></span>
+                      src={item.secure_url}
+                      alt="images-by-user"
+                    />
+                    <div className="border-t-2">
+                      <div className="flex justify-start gap-2 pt-2 ">
+                        <button
+                          className="bg-transparent"
+                          onClick={() => handleLikeImage(item._id)}
+                        >
+                          <GrLike />
+                          {item.likes}
+                        </button>
+                        <button
+                          className="bg-transparent"
+                          onClick={() => handleDisLikeImage(item._id)}
+                        >
+                          <GrDislike />
+                          {item.dislikes}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 );
               });

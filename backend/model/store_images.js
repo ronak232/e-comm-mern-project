@@ -14,11 +14,7 @@ const UserUploadedImgs = new mongoose.Schema({
     type: String,
     ref: "User",
   },
-  likes: { type: Number, default: 0 },
-  dislikes: { type: Number, default: 0 },
-  postDate: {
-    type: String,
-  },
+
   editedAt: Date,
   flagged: { type: Boolean, default: false },
   timestamp: {
@@ -29,6 +25,11 @@ const UserUploadedImgs = new mongoose.Schema({
     {
       secure_url: { type: [String] },
       img_id: String,
+      likes: { type: Number, default: 0 },
+      dislikes: { type: Number, default: 0 },
+      postDate: {
+        type: String,
+      },
     },
   ],
 });

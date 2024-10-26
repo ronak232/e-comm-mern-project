@@ -29,16 +29,6 @@ export const UploadFilesPopup = (props) => {
           />
 
           <div className="flex flex-col items-center justify-center gap-2 text-[16px] text-md bg-white p-2 w-full h-[140px]">
-            <input
-              type="file"
-              id="file"
-              className="hidden"
-              onChange={props.handleSelectFile}
-              name="product_images "
-              multiple
-              title="Upload Image"
-            />
-
             <label
               htmlFor="file"
               className="text-[16px] text-sm text-black rounded-md p-1 w-full h-full cursor-pointer flex flex-col justify-center items-center gap-3"
@@ -50,9 +40,21 @@ export const UploadFilesPopup = (props) => {
                 alt=""
               />
               Click here to upload image/video
-              <button className="browse_btn max-w-[80px] p-2 rounded-md">
+              <input
+                type="file"
+                id="file"
+                className="hidden"
+                onChange={props.handleSelectFile}
+                name="product_images "
+                multiple
+                title="Upload Image"
+              />
+              <div
+                className="browse_btn max-w-[80px] p-2 rounded-md"
+                type="submit"
+              >
                 Browse
-              </button>
+              </div>
             </label>
 
             <p className="text-[12px] text-gray-950">

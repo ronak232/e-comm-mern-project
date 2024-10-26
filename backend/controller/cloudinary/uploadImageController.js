@@ -1,4 +1,4 @@
-import { handleUploadToCloudinary } from "../../utils/cloudinaryUploadImage.js";
+import { handleUploadToCloudinary } from "../../lib/cloudinary/cloudinaryUploadImage.js";
 import { UploadedImgs } from "../../model/store_images.js";
 
 // function to handle user uploaded images

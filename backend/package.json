@@ -13,6 +13,7 @@
   "type": "module",
   "--es-module-specifier-resolution": "node",
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "body-parser": "^1.20.2",
     "cloudinary": "^2.5.0",
     "cookie-parser": "^1.4.6",

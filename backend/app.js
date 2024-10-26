@@ -25,8 +25,6 @@ app.use(
   express.static(path.join(__dirname, "/public/images"))
 );
 
-console.log(path.join(__dirname, "public/images"));
-
 app.listen(process.env.LOCAL_PORT || 8000, () => {
   console.log("listening on 8000 success");
 });

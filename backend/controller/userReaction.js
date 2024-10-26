@@ -28,7 +28,7 @@ export const handleLikedReaction = async (req, res) => {
       }
     })
     .catch(() => {
-      res.status(400).json({
+      res.status(500).json({
         message: "Internal Server Error",
       });
     });
@@ -62,7 +62,7 @@ export const handleDislikedReaction = async (req, res) => {
       }
     })
     .catch(() => {
-      res.status(400).json({
+      res.status(500).json({
         message: "Internal Server Error",
       });
     });
