@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { useQuery } from "react-query";
-import { GrDislike, GrLike } from "react-icons/gr";
+import { BiDislike, BiLike } from "react-icons/bi";
 import { UploadFilesPopup } from "../../Components/UploadFilesPopup";
 
 function ImageUpload() {
@@ -11,6 +11,7 @@ function ImageUpload() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState({ prog: 0 });
   const { id } = useParams();
+  const [updateUI, setUpdateUI] = useState(false); // track ui changes
   const baseURL = process.env.REACT_APP_BASE_URL;
 
   let options = {
@@ -63,7 +64,7 @@ function ImageUpload() {
   // react-query fetch request
   const fetchUploadedImages = async () => {
     const resp = await axios.get(
-      `${baseURL}/api/images/fetchimages/images=${user.productId}`
+      `/api/images/fetchimages/images=${user.productId}`
     );
     return resp.data.data;
   };
@@ -121,9 +122,9 @@ function ImageUpload() {
 
   const handleLikeImage = async (id) => {
     await axios
-      .post(`${baseURL}/api/images/upload/${id}/likes/post`, { imageId: id })
+      .post(`/api/images/upload/${id}/likes/post`, { imageId: id })
       .then((resp) => {
-        console.log(resp.data);
+        setUpdateUI((prev) => !prev); // update the ui changes
         return resp.data.data;
       })
       .catch((err) => {
@@ -135,6 +136,7 @@ function ImageUpload() {
     await axios
       .post(`${baseURL}/api/images/upload/${id}/dislikes/post`, { imageId: id })
       .then((res) => {
+        setUpdateUI((prev) => !prev); // update the ui changes
         return res.data.data;
       })
       .catch((err) => {
@@ -165,20 +167,20 @@ function ImageUpload() {
                       src={item.secure_url}
                       alt="images-by-user"
                     />
-                    <div className="border-t-2">
-                      <div className="flex justify-start gap-2 pt-2 ">
+                    <div className="border-t-[1px] border-neutral-400">
+                      <div className="flex justify-start gap-2 pt-1 ">
                         <button
-                          className="bg-transparent"
+                          className="bg-transparent p-0 text-neutral-400 text-[10px]"
                           onClick={() => handleLikeImage(item._id)}
                         >
-                          <GrLike />
+                          <BiLike className="pb-1 text-neutral-400 text-lg" />
                           {item.likes}
                         </button>
                         <button
-                          className="bg-transparent"
+                          className="bg-transparent p-0 text-neutral-400 text-[10px]"
                           onClick={() => handleDisLikeImage(item._id)}
                         >
-                          <GrDislike />
+                          <BiDislike className="pb-1 text-neutral-400 text-lg" />
                           {item.dislikes}
                         </button>
                       </div>
