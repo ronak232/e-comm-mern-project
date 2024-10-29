@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getAuth } from "firebase/auth";
@@ -10,8 +10,9 @@ function ImageUpload() {
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState({ prog: 0 });
+  const [likes, setLikes] = useState(null);
+  const [disLikes, setDisLikes] = useState(null);
   const { id } = useParams();
-  const [updateUI, setUpdateUI] = useState(false); // track ui changes
   const baseURL = process.env.REACT_APP_BASE_URL;
 
   let options = {
@@ -121,34 +122,35 @@ function ImageUpload() {
   };
 
   const handleLikeImage = async (id) => {
+    setLikes((prevLikes) => prevLikes + 1);
     await axios
-      .post(`/api/images/upload/${id}/likes/post`, { imageId: id })
+      .post(`${baseURL}/api/images/upload/${id}/likes/post`, { imageId: id })
       .then((resp) => {
-        setUpdateUI((prev) => !prev); // update the ui changes
-        return resp.data.data;
+        setLikes(resp.data.data);
       })
       .catch((err) => {
         console.error(err.message);
+        setLikes((prevLikes) => prevLikes - 1);
       });
   };
 
   const handleDisLikeImage = async (id) => {
+    setDisLikes(disLikes - 1);
     await axios
       .post(`${baseURL}/api/images/upload/${id}/dislikes/post`, { imageId: id })
       .then((res) => {
-        setUpdateUI((prev) => !prev); // update the ui changes
         return res.data.data;
       })
       .catch((err) => {
         console.error(err);
+        setDisLikes(disLikes + 1);
       });
   };
 
   return (
     <>
-      {/* {resp?.length > 0 && ( */}
       <div className="block w-full max-w-[430px]">
-        <div className="w-full flex gap-2 p-3 overflow-x-scroll overflow-y-hidden">
+        <div className="w-full flex gap-2 overflow-x-scroll overflow-y-hidden">
           {/* flatMap helps combine all images into a single, continuous list so that they can be rendered in one container */}
           {!isLoading &&
             resp?.flatMap(({ product_images, userName }) => {
@@ -199,7 +201,6 @@ function ImageUpload() {
           />
         </div>
       </div>
-      {/* )} */}
     </>
   );
 }

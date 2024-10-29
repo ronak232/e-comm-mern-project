@@ -3,13 +3,14 @@ import { Button } from "../StyledComponents/Button.style";
 import { FiShoppingCart } from "react-icons/fi";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useContext, useState } from "react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import Rating from "../features/Rating/Rating";
 import SkeletonCard from "../Components/Skeleton";
+import { ThemeContext } from "../hooks/context/thememode";
 const ReviewAndComment = React.lazy(() =>
   import("../features/Rating/ReviewAndComment")
 );
@@ -21,6 +22,8 @@ function ProductDetails({
   handleDecrement,
 }) {
   const [thumbNailImg, setThumbNailImg] = useState(null);
+  const theme = useContext(ThemeContext);
+  const darkMode = theme?.state?.darkMode;
   const { id } = useParams();
   const matchedProducts = allProducts
     ?.flat()
@@ -72,7 +75,10 @@ function ProductDetails({
           </Swiper>
         </div>
         <div className="productdetails__card_body">
-          <h1 className="productdetails__card_title">
+          <h1
+            className="productdetails__card_title"
+            style={{ color: darkMode ? "white" : "black" }}
+          >
             {matchedProducts?.title}
           </h1>
           <p className="productdetails__description">

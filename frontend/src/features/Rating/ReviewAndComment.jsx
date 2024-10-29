@@ -222,10 +222,7 @@ export default function ReviewAndComment() {
         className="relative flex flex-col gap-2"
         onSubmit={(e) => (isEditingComment ? handleSave(e) : handleAddComment)}
       >
-        <div
-          className="flex items-center p-2 absolute top-10 right-0"
-         
-        >
+        <div className="flex items-center p-2 absolute top-10 right-0">
           {isUserLoggedIn && (
             <button
               className="bg-transparent p-0"
@@ -280,97 +277,99 @@ export default function ReviewAndComment() {
           )}
         </div>
       </form>
-      <ImageUpload />
-      <ul className="product__reviews_list">
-        {loader ? (
-          // Show skeleton loader when loading is true
-          [...Array(getUserComments.length).keys()].map((_, index) => {
-            return <SkeletonCard key={index} />;
-          })
-        ) : getUserComments?.length > 0 ? (
-          // Show comments if available and not loading
-          getUserComments.map((value) => {
-            return (
-              <li className="product__reviews_items" key={value._id}>
-                <h1 className="product__reviews_custname text-gray-500">
-                  {value.userName}
-                </h1>
-                <p>{value.commentText}</p>
-                <span className="product__reviews_comment">
-                  <span className="product__reviews_expression">
-                    <button onClick={() => handleLikeComment(value._id)}>
-                      <GrLike className="text-gray-500 size-3" />
-                      <span>{value.likes}</span>
-                    </button>
-                    <button onClick={() => handleDisLikeComment(value._id)}>
-                      <GrDislike className="text-gray-500 size-3" />
-                      <span>{value.dislikes}</span>
-                    </button>
-                    <span className="product__reviews_postdate text-gray-500">
-                      {value.createdAt}
-                    </span>
-                  </span>
-                  {user.userId === value.userId && (
-                    <span className="product__reviews_useraction">
-                      <span>
-                        <button
-                          onClick={() => handleEdit(value._id)}
-                          name="Edit"
-                          title="Edit"
-                        >
-                          <BiEdit className="text-gray-500" />
-                        </button>
-                      </span>
-                      <span>
-                        <button
-                          onClick={() => handleDelete(value._id)}
-                          name="Delete"
-                          title="Delete"
-                        >
-                          <AiOutlineDelete className="text-gray-500" />
-                        </button>
-                      </span>
-                    </span>
-                  )}
-                </span>
-              </li>
-            );
-          })
-        ) : (
-          // Show this if no comments and not loading
-          <div>
-            <h2>Be the first person to review...</h2>
-          </div>
-        )}
-      </ul>
-      <div className="comment">
-        {getUserComments.length > 0 && totalPages >= 1 && showPagination && (
-          <div className="comment_pagination">
-            {currentPage > 1 && (
-              <button className="comment_prev " onClick={handlePrev}>
-                Prev
-              </button>
-            )}
-            {[...Array(totalPages)?.keys()].map((pageNo) => {
+      <div className="flex flex-col gap-2 p-1 rounded-md mt-4">
+        <ImageUpload />
+        <ul className="product__reviews_list">
+          {loader ? (
+            // Show skeleton loader when loading is true
+            [...Array(getUserComments.length).keys()].map((_, index) => {
+              return <SkeletonCard key={index} />;
+            })
+          ) : getUserComments?.length > 0 ? (
+            // Show comments if available and not loading
+            getUserComments.map((value) => {
               return (
-                <button
-                  className={
-                    currentPage === pageNo + 1 ? "active" : "comment_pageno"
-                  }
-                  key={pageNo}
-                  onClick={() => handlePageChange(pageNo + 1)}
-                >
-                  {pageNo + 1}
-                </button>
+                <li className="product__reviews_items" key={value._id}>
+                  <h1 className="product__reviews_custname text-gray-500">
+                    {value.userName}
+                  </h1>
+                  <p>{value.commentText}</p>
+                  <span className="product__reviews_comment">
+                    <span className="product__reviews_expression">
+                      <button onClick={() => handleLikeComment(value._id)}>
+                        <GrLike className="text-gray-500 size-3" />
+                        <span>{value.likes}</span>
+                      </button>
+                      <button onClick={() => handleDisLikeComment(value._id)}>
+                        <GrDislike className="text-gray-500 size-3" />
+                        <span>{value.dislikes}</span>
+                      </button>
+                      <span className="product__reviews_postdate text-gray-500">
+                        {value.createdAt}
+                      </span>
+                    </span>
+                    {user.userId === value.userId && (
+                      <span className="product__reviews_useraction">
+                        <span>
+                          <button
+                            onClick={() => handleEdit(value._id)}
+                            name="Edit"
+                            title="Edit"
+                          >
+                            <BiEdit className="text-gray-500" />
+                          </button>
+                        </span>
+                        <span>
+                          <button
+                            onClick={() => handleDelete(value._id)}
+                            name="Delete"
+                            title="Delete"
+                          >
+                            <AiOutlineDelete className="text-gray-500" />
+                          </button>
+                        </span>
+                      </span>
+                    )}
+                  </span>
+                </li>
               );
-            })}
-            {currentPage < totalPages && (
-              <button className="comment_next" onClick={handleNext}>
-                Next
-              </button>
-            )}
-          </div>
-        )}
+            })
+          ) : (
+            // Show this if no comments and not loading
+            <div>
+              <h2>Be the first person to review...</h2>
+            </div>
+          )}
+        </ul>
+        <div className="comment">
+          {getUserComments.length > 0 && totalPages >= 1 && showPagination && (
+            <div className="comment_pagination">
+              {currentPage > 1 && (
+                <button className="comment_prev " onClick={handlePrev}>
+                  Prev
+                </button>
+              )}
+              {[...Array(totalPages)?.keys()].map((pageNo) => {
+                return (
+                  <button
+                    className={
+                      currentPage === pageNo + 1 ? "active" : "comment_pageno"
+                    }
+                    key={pageNo}
+                    onClick={() => handlePageChange(pageNo + 1)}
+                  >
+                    {pageNo + 1}
+                  </button>
+                );
+              })}
+              {currentPage < totalPages && (
+                <button className="comment_next" onClick={handleNext}>
+                  Next
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
