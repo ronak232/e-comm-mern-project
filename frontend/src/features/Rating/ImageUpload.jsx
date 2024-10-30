@@ -10,7 +10,7 @@ function ImageUpload() {
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState({ prog: 0 });
-  const [likes, setLikes] = useState(null);
+  const [likes, setLikes] = useState(0);
   const [disLikes, setDisLikes] = useState(null);
   const { id } = useParams();
   const baseURL = process.env.REACT_APP_BASE_URL;
@@ -65,7 +65,7 @@ function ImageUpload() {
   // react-query fetch request
   const fetchUploadedImages = async () => {
     const resp = await axios.get(
-      `/api/images/fetchimages/images=${user.productId}`
+      `${baseURL}/api/images/fetchimages/images=${user.productId}`
     );
     return resp.data.data;
   };
@@ -122,11 +122,16 @@ function ImageUpload() {
   };
 
   const handleLikeImage = async (id) => {
-    setLikes((prevLikes) => prevLikes + 1);
+    setLikes((prevLikes) => prevLikes + likes);
     await axios
       .post(`${baseURL}/api/images/upload/${id}/likes/post`, { imageId: id })
       .then((resp) => {
-        setLikes(resp.data.data);
+        if (resp.data && resp.data.success) {
+          // Backend confirmed the like, update with the accurate count
+          setLikes(resp.data.data);
+        } else {
+          throw new Error("Failed to confirm like with backend");
+        }
       })
       .catch((err) => {
         console.error(err.message);
