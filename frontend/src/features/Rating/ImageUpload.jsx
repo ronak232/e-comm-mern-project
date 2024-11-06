@@ -66,7 +66,7 @@ function ImageUpload() {
   // react-query fetch request
   const fetchUploadedImages = async () => {
     const resp = await axios.get(
-      `/api/images/fetchimages/images=${user.productId}`
+      `${baseURL}/api/images/fetchimages/images=${user.productId}`
     );
     return resp.data.data;
   };
@@ -100,7 +100,7 @@ function ImageUpload() {
     });
 
     await axios
-      .post(`/api/images/upload`, data, {
+      .post(`${baseURL}/api/images/upload`, data, {
         onUploadProgress: (progressEvent) => {
           setProgress((progressState) => {
             if (!loading) {
@@ -130,7 +130,7 @@ function ImageUpload() {
     setLikes((prevLikes) => prevLikes + likes);
 
     await axios
-      .post(`/api/images/upload/${id}/likes/post`, {
+      .post(`${baseURL}/api/images/upload/${id}/likes/post`, {
         imageId: id,
         userId: user.userId,
       })
