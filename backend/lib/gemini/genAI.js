@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -20,8 +21,7 @@ const generationConfig = {
 async function run() {
   const chatSession = model.startChat({
     generationConfig,
-    history: [
-    ],
+    history: [],
   });
 
   const result = await chatSession.sendMessage("INSERT_INPUT_HERE");

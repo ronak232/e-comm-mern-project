@@ -21,9 +21,7 @@ const CommentAndReview = new mongoose.Schema({
   createdAt: {
     type: String,
   },
-  editedAt: Date,
   flagged: { type: Boolean, default: false },
-  replied_comment_id: { String },
   timestamp: {
     type: Date,
     default: Date.now,

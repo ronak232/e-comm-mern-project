@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 dotenv.config();
 
-const client = mongoose.connect(process.env.mongo_uri || 8001, {
+mongoose.connect(process.env.mongo_uri || 8001, {
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 40000,
 });

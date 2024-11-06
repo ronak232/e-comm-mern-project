@@ -6,6 +6,8 @@ import { FirebaseProvider } from "./hooks/firebase/firebase..config.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ModalProvider } from "./hooks/context/useModal";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const query = new QueryClient();
@@ -15,7 +17,9 @@ root.render(
       <FirebaseProvider>
         <QueryClientProvider client={query}>
           <ModalProvider>
-            <App />
+            <Provider store={store}>
+              <App />
+            </Provider>
           </ModalProvider>
         </QueryClientProvider>
       </FirebaseProvider>

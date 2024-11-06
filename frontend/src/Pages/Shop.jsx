@@ -3,7 +3,7 @@ import { Button } from "../StyledComponents/Button.style";
 import Spinner from "../utils/Loader/Loading";
 import Rating from "../features/Rating/Rating";
 import { FiShoppingCart } from "react-icons/fi";
-import FilterProduct from "./FilterProduct";
+import FilterProduct from "../Components/FilterProduct";
 import { useNavigate } from "react-router-dom";
 import spinner from "../Images/Spinner.gif";
 

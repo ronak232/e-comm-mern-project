@@ -15,6 +15,7 @@ import {
   handleDislikedImage,
   handleLikedImage,
 } from "../controller/cloudinary/imageIxpression.js";
+import { handleProductRating } from "../controller/rating/interactiverating.js";
 
 const routes = Router();
 
@@ -51,5 +52,7 @@ routes.post(
 
 routes.post("/api/images/upload/:id/likes/post", handleLikedImage);
 routes.post("/api/images/upload/:id/dislikes/post", handleDislikedImage);
+
+routes.post("/api/comment/product_review/rating/post", handleProductRating);
 
 export default routes;

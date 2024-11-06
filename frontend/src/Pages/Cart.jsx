@@ -4,14 +4,9 @@ import { Button } from "../StyledComponents/Button.style";
 import { SlArrowLeft } from "react-icons/sl";
 import { ThemeContext } from "../hooks/context/thememode";
 import totalAmount from "../utils/totalAmount";
-import emptyCartImg from '../Images/empty-cart.png'
+import emptyCartImg from "../Images/empty-cart.png";
 
-function Cart({
-  cartItems,
-  onRemove,
-  handleIncrement,
-  handleDecrement,
-}) {
+function Cart({ cartItems, onRemove, handleIncrement, handleDecrement }) {
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   // let totalAmount = cartItems
   //   ?.map((item) => item.price * item.quantity)
@@ -35,7 +30,9 @@ function Cart({
             <div className="empty-cart">
               <img src={emptyCartImg} alt="" />
               <p>No items in the cart</p>
-              <Link to={"/shop"}><button className="exp-store">Explore Shop</button></Link>
+              <Link to={"/shop"}>
+                <button className="exp-store">Explore Shop</button>
+              </Link>
             </div>
           ) : (
             <div className="cart-items-products">
@@ -135,12 +132,6 @@ function Cart({
               <ul className="cart-items-sidepanel__summary">
                 <li>
                   Total Items <span>{totalItems}</span>
-                </li>
-                <li>
-                  Apply Discount <span></span>
-                </li>
-                <li>
-                  Total Saving <span></span>
                 </li>
 
                 <li className="cart-items-sidepanel-checkout-text-center">

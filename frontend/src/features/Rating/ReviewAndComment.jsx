@@ -10,6 +10,7 @@ import SkeletonCard from "../../Components/Skeleton";
 import ImageUpload from "./ImageUpload";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { useModal } from "../../hooks/context/useModal";
+import InteractiveRating from "./InteractiveRating";
 
 export default function ReviewAndComment() {
   const [userComment, setUserComment] = useState("");
@@ -25,9 +26,8 @@ export default function ReviewAndComment() {
   const { isUserLoggedIn } = useFirebaseAuth();
   const { id } = useParams();
   const ref = useRef(null);
-  const baseURL = process.env.REACT_APP_BASE_URL;
-
   const { openModal } = useModal();
+  const baseURL = process.env.REACT_APP_BASE_URL;
 
   let options = {
     weekday: "short",
@@ -258,14 +258,17 @@ export default function ReviewAndComment() {
                 Save Comment
               </button>
             ) : (
-              <button
-                className="add_comment"
-                onClick={handleAddComment}
-                title="Add Comment"
-                name="Add Comment"
-              >
-                Add Comment
-              </button>
+              <div>
+                <InteractiveRating user={user} />
+                <button
+                  className="add_comment"
+                  onClick={handleAddComment}
+                  title="Add Comment"
+                  name="Add Comment"
+                >
+                  Add Comment
+                </button>
+              </div>
             )
           ) : (
             <Link to={"/login"}>

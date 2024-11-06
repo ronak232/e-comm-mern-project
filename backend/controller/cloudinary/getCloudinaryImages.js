@@ -6,7 +6,6 @@ export const getUserCloudImages = (req, res) => {
   const uploadedImage = UploadedImgs.find({ productId });
   uploadedImage
     .then((resp) => {
-      console.log(resp);
       if (!uploadedImage && uploadedImage.length === 0) {
         res.status(404).json({
           success: false,

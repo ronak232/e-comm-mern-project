@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getAuth } from "firebase/auth";
@@ -12,6 +12,7 @@ function ImageUpload() {
   const [progress, setProgress] = useState({ prog: 0 });
   const [likes, setLikes] = useState(0);
   const [disLikes, setDisLikes] = useState(null);
+  const [checkUserHasLiked, setCheckUserHasLiked] = useState(false);
   const { id } = useParams();
   const baseURL = process.env.REACT_APP_BASE_URL;
 
@@ -65,7 +66,7 @@ function ImageUpload() {
   // react-query fetch request
   const fetchUploadedImages = async () => {
     const resp = await axios.get(
-      `${baseURL}/api/images/fetchimages/images=${user.productId}`
+      `/api/images/fetchimages/images=${user.productId}`
     );
     return resp.data.data;
   };
@@ -99,7 +100,7 @@ function ImageUpload() {
     });
 
     await axios
-      .post(`${baseURL}/api/images/upload`, data, {
+      .post(`/api/images/upload`, data, {
         onUploadProgress: (progressEvent) => {
           setProgress((progressState) => {
             if (!loading) {
@@ -122,9 +123,17 @@ function ImageUpload() {
   };
 
   const handleLikeImage = async (id) => {
+    if (user.userId && checkUserHasLiked) {
+      setCheckUserHasLiked(false);
+      return;
+    }
     setLikes((prevLikes) => prevLikes + likes);
+
     await axios
-      .post(`${baseURL}/api/images/upload/${id}/likes/post`, { imageId: id })
+      .post(`/api/images/upload/${id}/likes/post`, {
+        imageId: id,
+        userId: user.userId,
+      })
       .then((resp) => {
         if (resp.data && resp.data.success) {
           // Backend confirmed the like, update with the accurate count
@@ -135,8 +144,10 @@ function ImageUpload() {
       })
       .catch((err) => {
         console.error(err.message);
-        setLikes((prevLikes) => prevLikes - 1);
       });
+
+    setCheckUserHasLiked(true);
+    return setLikes((prevLikes) => prevLikes - 1);
   };
 
   const handleDisLikeImage = async (id) => {

@@ -35,6 +35,6 @@ const UserUploadedImgs = new mongoose.Schema({
 });
 
 export const UploadedImgs = mongoose.model(
-  "useruploadedimges",
+  "user_uploaded_imges",
   UserUploadedImgs
 );
