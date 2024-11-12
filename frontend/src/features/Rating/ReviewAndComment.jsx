@@ -11,6 +11,8 @@ import ImageUpload from "./ImageUpload";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { useModal } from "../../hooks/context/useModal";
 import InteractiveRating from "./InteractiveRating";
+import ShowStarRating from "./ShowStarRating";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 export default function ReviewAndComment() {
   const [userComment, setUserComment] = useState("");
@@ -27,7 +29,11 @@ export default function ReviewAndComment() {
   const { id } = useParams();
   const ref = useRef(null);
   const { openModal } = useModal();
-  const baseURL = process.env.REACT_APP_BASE_URL;
+
+  const [isTabSwitched, setIsTabSwitched] = useState("tab1");
+  const handleRatingTab = (index) => {
+    setIsTabSwitched(index);
+  };
 
   let options = {
     weekday: "short",
@@ -69,9 +75,9 @@ export default function ReviewAndComment() {
     }
     setLoader(true);
     await axios
-      .post(`${baseURL}/api/comment/post_comment`, user)
+      .post(`/api/comment/post_comment`, user)
       .then((resp) => {
-        setGetComments([...getUserComments, resp?.data]);
+        setGetComments([resp?.data, ...getUserComments]);
         setLoader(false);
         setUserComment("");
         setUpdateUI((prev) => !prev); // update the ui changes
@@ -84,14 +90,14 @@ export default function ReviewAndComment() {
   // delete method
   const handleDelete = async (id) => {
     await axios
-      .delete(`${baseURL}/api/comment/delete/${id}`)
+      .delete(`/api/comment/delete/${id}`)
       .then((resp) => {
         if (resp.data.success && isError === false) {
           let newComment = getUserComments.filter(
             (item) => resp.data._id !== item.id
           );
-          setUpdateUI((prev) => !prev);
           setUserComment(newComment);
+          setUpdateUI((prev) => !prev);
         } else {
           setError("Cannot delete the comment...");
         }
@@ -189,9 +195,7 @@ export default function ReviewAndComment() {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(
-          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
-        )
+        .get(`/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
@@ -207,11 +211,14 @@ export default function ReviewAndComment() {
         });
     };
     fetchData();
-    window.addEventListener("resize", autoresize());
+
+    // dispatch(handleGetUserRating(id));
+
+    window.addEventListener("resize", autoresize);
     return () => {
       window.removeEventListener("resize", autoresize);
     };
-  }, [baseURL, currentPage, id, updateUI]);
+  }, [currentPage, id, updateUI]);
   // Call fetchComments when productId or page changes
 
   return (
@@ -282,68 +289,95 @@ export default function ReviewAndComment() {
       </form>
       <div className="flex flex-col gap-2 p-1 rounded-md mt-4">
         <ImageUpload />
-        <ul className="product__reviews_list">
-          {loader ? (
-            // Show skeleton loader when loading is true
-            [...Array(getUserComments.length).keys()].map((_, index) => {
-              return <SkeletonCard key={index} />;
-            })
-          ) : getUserComments?.length > 0 ? (
-            // Show comments if available and not loading
-            getUserComments.map((value) => {
-              return (
-                <li className="product__reviews_items" key={value._id}>
-                  <h1 className="product__reviews_custname text-gray-500">
-                    {value.userName}
-                  </h1>
-                  <p>{value.commentText}</p>
-                  <span className="product__reviews_comment">
-                    <span className="product__reviews_expression">
-                      <button onClick={() => handleLikeComment(value._id)}>
-                        <GrLike className="text-gray-500 size-3" />
-                        <span>{value.likes}</span>
-                      </button>
-                      <button onClick={() => handleDisLikeComment(value._id)}>
-                        <GrDislike className="text-gray-500 size-3" />
-                        <span>{value.dislikes}</span>
-                      </button>
-                      <span className="product__reviews_postdate text-gray-500">
-                        {value.createdAt}
-                      </span>
-                    </span>
-                    {user.userId === value.userId && (
-                      <span className="product__reviews_useraction">
-                        <span>
-                          <button
-                            onClick={() => handleEdit(value._id)}
-                            name="Edit"
-                            title="Edit"
-                          >
-                            <BiEdit className="text-gray-500" />
+        <div className="flex justify-between">
+          <button
+            className={`w-full bg-transparent ${
+              isTabSwitched === "tab1" ? "border-solid border-2" : ""
+            }`}
+            onClick={() => handleRatingTab("tab1")}
+          >
+            Comments{" "}
+          </button>
+          <button
+            className={`w-full bg-transparent ${
+              isTabSwitched === "tab2" ? "border-solid border-2" : ""
+            }`}
+            onClick={() => handleRatingTab("tab2")}
+          >
+            Ratings
+          </button>
+        </div>
+        <div>
+          {isTabSwitched === "tab1" && (
+            <ul className="product__reviews_list">
+              {loader ? (
+                // Show skeleton loader when loading is true
+                [...Array(getUserComments.length).keys()].map((_, index) => {
+                  return <SkeletonCard key={index} />;
+                })
+              ) : getUserComments?.length > 0 ? (
+                // Show comments if available and not loading
+                getUserComments.map((value) => {
+                  return (
+                    <li className="product__reviews_items" key={value._id}>
+                      <h1 className="product__reviews_custname text-gray-500">
+                        {value.userName}
+                      </h1>
+                      <p>{value.commentText}</p>
+                      <span className="product__reviews_comment">
+                        <span className="product__reviews_expression">
+                          <button onClick={() => handleLikeComment(value._id)}>
+                            <GrLike className="text-gray-500 size-3" />
+                            <span>{value.likes}</span>
                           </button>
-                        </span>
-                        <span>
                           <button
-                            onClick={() => handleDelete(value._id)}
-                            name="Delete"
-                            title="Delete"
+                            onClick={() => handleDisLikeComment(value._id)}
                           >
-                            <AiOutlineDelete className="text-gray-500" />
+                            <GrDislike className="text-gray-500 size-3" />
+                            <span>{value.dislikes}</span>
                           </button>
+                          <span className="product__reviews_postdate text-gray-500">
+                            {value.createdAt}
+                          </span>
                         </span>
+                        {user.userId === value.userId && (
+                          <span className="product__reviews_useraction">
+                            <span>
+                              <button
+                                onClick={() => handleEdit(value._id)}
+                                name="Edit"
+                                title="Edit"
+                              >
+                                <BiEdit className="text-gray-500" />
+                              </button>
+                            </span>
+                            <span>
+                              <button
+                                onClick={() => handleDelete(value._id)}
+                                name="Delete"
+                                title="Delete"
+                              >
+                                <AiOutlineDelete className="text-gray-500" />
+                              </button>
+                            </span>
+                          </span>
+                        )}
                       </span>
-                    )}
-                  </span>
-                </li>
-              );
-            })
-          ) : (
-            // Show this if no comments and not loading
-            <div>
-              <h2>Be the first person to review...</h2>
-            </div>
+                    </li>
+                  );
+                })
+              ) : (
+                // Show this if no comments and not loading
+                <div>
+                  <h2>Be the first person to review...</h2>
+                </div>
+              )}
+            </ul>
           )}
-        </ul>
+          {isTabSwitched === "tab2" && <ShowStarRating />}
+        </div>
+      </div>
+      <div>
         <div className="comment">
           {getUserComments.length > 0 && totalPages >= 1 && showPagination && (
             <div className="comment_pagination">

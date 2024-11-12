@@ -5,6 +5,7 @@ import { getAuth } from "firebase/auth";
 import { useQuery } from "react-query";
 import { BiDislike, BiLike } from "react-icons/bi";
 import { UploadFilesPopup } from "../../Components/UploadFilesPopup";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 function ImageUpload() {
   const [imageFile, setImageFile] = useState(null);
@@ -14,7 +15,6 @@ function ImageUpload() {
   const [disLikes, setDisLikes] = useState(null);
   const [checkUserHasLiked, setCheckUserHasLiked] = useState(false);
   const { id } = useParams();
-  const baseURL = process.env.REACT_APP_BASE_URL;
 
   let options = {
     weekday: "short",
@@ -66,7 +66,7 @@ function ImageUpload() {
   // react-query fetch request
   const fetchUploadedImages = async () => {
     const resp = await axios.get(
-      `${baseURL}/api/images/fetchimages/images=${user.productId}`
+      `/api/images/fetchimages/images=${user.productId}`
     );
     return resp.data.data;
   };

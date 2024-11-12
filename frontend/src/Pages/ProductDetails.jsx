@@ -11,6 +11,7 @@ import "swiper/css/thumbs";
 import Rating from "../features/Rating/Rating";
 import SkeletonCard from "../Components/Skeleton";
 import { ThemeContext } from "../hooks/context/thememode";
+import ShowStarRating from "../features/Rating/ShowStarRating";
 const ReviewAndComment = React.lazy(() =>
   import("../features/Rating/ReviewAndComment")
 );
@@ -28,6 +29,7 @@ function ProductDetails({
   const matchedProducts = allProducts
     ?.flat()
     ?.find((product) => product.id === Number(id));
+
   return (
     <div className="productdetails__container">
       <div className="productdetails__card">

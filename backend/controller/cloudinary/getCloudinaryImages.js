@@ -17,7 +17,7 @@ export const getUserCloudImages = (req, res) => {
         data: resp,
       });
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).json({
         success: false,
         message: "internal server error",

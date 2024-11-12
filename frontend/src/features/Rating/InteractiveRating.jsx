@@ -11,11 +11,8 @@ function InteractiveRating({ user }) {
 
   // function handleMouseOver that takes i as a parameter (represent the hovered star's index) and updates ratingOnHover state with this index value i...
   const handleMouseHover = (i) => {
-    console.log("On hover value ", i);
     dispatch(rateOnHover(i));
   };
-
-  console.log("Onhover", onHover, "On select", rateOnSelect);
 
   const handleOnMouseLeave = () => {
     dispatch(rateOnHover());

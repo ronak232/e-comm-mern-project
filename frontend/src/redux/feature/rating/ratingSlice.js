@@ -1,14 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  handleGetAsyncThunk,
+  handleGetUserRating,
   handlePostAsyncThunk,
 } from "../../thunk/ratingThunk";
 
-const initialState = {
-  allRatings: [],
+export const initialState = {
+  getProductRating: [],
   rateOnSelect: 0,
   onHover: 0,
-  startStarIndex: 0,
   error: null,
   success: false,
   loading: false,
@@ -40,17 +39,20 @@ const userRatingSlice = createSlice({
       state.loading = true;
       state.success = action.error.message;
     });
-    builder.addCase(handleGetAsyncThunk.fulfilled, (state, action) => {
+    builder.addCase(handleGetUserRating.pending, (state) => {
       state.loading = true;
-      state.allRatings = action.payload;
     });
-    builder.addCase(handleGetAsyncThunk.rejected, (state, action) => {
+    builder.addCase(handleGetUserRating.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.getProductRating = action.payload || [];
+    });
+    builder.addCase(handleGetUserRating.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });
   },
 });
 
-export const { rateOnHover, setSelectRating, resetStarRating } =
-  userRatingSlice.actions;
+export const { rateOnHover, setSelectRating } = userRatingSlice.actions;
 export default userRatingSlice.reducer;

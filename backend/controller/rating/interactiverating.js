@@ -7,6 +7,8 @@ export const handleProductRating = async (req, res) => {
     return res.status(400).json({ msg: "Missing required fields" });
   }
 
+  let isRated = null;
+
   try {
     // Check if the user rating already exists for this product
     const isUserRated = await InteractiveRating.findOne({
@@ -19,8 +21,9 @@ export const handleProductRating = async (req, res) => {
     );
 
     if (checkExistingRating) {
+      isRated = true;
       // If the rating exists, update the rating and userName fields
-      const updateUserRating = await InteractiveRating.findOneAndUpdate(
+      await InteractiveRating.findOneAndUpdate(
         { productId: pId, "userRating.userId": userId },
         {
           $set: {
@@ -32,10 +35,12 @@ export const handleProductRating = async (req, res) => {
       );
       return res.status(200).json({
         success: true,
-        msg: "Rating updated successfully.",
+        msg: "Rating updated",
         data: req.body,
+        isRated,
       });
     } else {
+      isRated = false;
       // If the rating does not exist, add a new entry for this user
       const addNewUserRating = await InteractiveRating.findOneAndUpdate(
         { productId: pId },
@@ -50,8 +55,9 @@ export const handleProductRating = async (req, res) => {
       if (addNewUserRating) {
         return res.status(201).json({
           success: true,
-          msg: "Rating added successfully.",
+          msg: "Rating added.",
           data: req.body,
+          isRated,
         });
       }
     }
