@@ -8,7 +8,7 @@ const handlePostAsyncThunk = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       await axios
-        .post(`/api/comment/product_review/rating/post`, data)
+        .post(`${baseURL}/api/comment/product_review/rating/post`, data)
         .then((resp) => {
           return thunkApi.dispatch(setSelectRating(resp.data));
         })
@@ -25,9 +25,12 @@ const handleGetUserRating = createAsyncThunk(
   "api/get/rating",
   async (pId, thunkApi) => {
     try {
-      const resp = await axios.get(`/api/comment/product_review/rating`, {
-        params: { productId: pId },
-      });
+      const resp = await axios.get(
+        `${baseURL}/api/comment/product_review/rating`,
+        {
+          params: { productId: pId },
+        }
+      );
       return resp.data.data; // Ensure this returns an array
     } catch (err) {
       return thunkApi.rejectWithValue({ err: err.message });

@@ -66,7 +66,7 @@ function ImageUpload() {
   // react-query fetch request
   const fetchUploadedImages = async () => {
     const resp = await axios.get(
-      `/api/images/fetchimages/images=${user.productId}`
+      `${baseURL}/api/images/fetchimages/images=${user.productId}`
     );
     return resp.data.data;
   };
