@@ -5,6 +5,7 @@ import { getAuth } from "firebase/auth";
 import { useQuery } from "react-query";
 import { BiDislike, BiLike } from "react-icons/bi";
 import { UploadFilesPopup } from "../../Components/UploadFilesPopup";
+import { useModal } from "../../hooks/context/useModal";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function ImageUpload() {
@@ -15,6 +16,7 @@ function ImageUpload() {
   const [disLikes, setDisLikes] = useState(null);
   const [checkUserHasLiked, setCheckUserHasLiked] = useState(false);
   const { id } = useParams();
+  const { modalForType } = useModal();
 
   let options = {
     weekday: "short",
@@ -209,12 +211,14 @@ function ImageUpload() {
             })}
 
           {/* Popup on select images... */}
-          <UploadFilesPopup
-            handleSelectFile={handleSelectFile}
-            handleUpload={handleUpload}
-            loading={loading}
-            progress={progress}
-          />
+          {modalForType === "imageUpload" && (
+            <UploadFilesPopup
+              handleSelectFile={handleSelectFile}
+              handleUpload={handleUpload}
+              loading={loading}
+              progress={progress}
+            />
+          )}
         </div>
       </div>
     </>

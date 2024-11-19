@@ -17,6 +17,7 @@ import {
 } from "../controller/cloudinary/imageIxpression.js";
 import { handleProductRating } from "../controller/rating/interactiverating.js";
 import { getAllUserRatings } from "../controller/rating/getUserRating.js";
+import { handleGenerativePrompt } from "../lib/gemini/GenerativeAI.js";
 
 const routes = Router();
 
@@ -57,5 +58,7 @@ routes.post("/api/images/upload/:id/dislikes/post", handleDislikedImage);
 routes.post("/api/comment/product_review/rating/post", handleProductRating);
 
 routes.get("/api/comment/product_review/rating", getAllUserRatings);
+
+routes.patch("/api/comment/product_review/post/genAI", handleGenerativePrompt);
 
 export default routes;

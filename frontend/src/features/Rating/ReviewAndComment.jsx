@@ -12,6 +12,8 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { useModal } from "../../hooks/context/useModal";
 import InteractiveRating from "./InteractiveRating";
 import ShowStarRating from "./ShowStarRating";
+import GenerativeComment from "../GenerateComments/GenerativeAIComments";
+import CommentGeneration from "../GenerateComments/CommentGenerationModal";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 export default function ReviewAndComment() {
@@ -28,7 +30,7 @@ export default function ReviewAndComment() {
   const { isUserLoggedIn } = useFirebaseAuth();
   const { id } = useParams();
   const ref = useRef(null);
-  const { openModal } = useModal();
+  const { openModal, modalForType } = useModal();
 
   const [isTabSwitched, setIsTabSwitched] = useState("tab1");
   const handleRatingTab = (index) => {
@@ -195,7 +197,9 @@ export default function ReviewAndComment() {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(`${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`)
+        .get(
+          `${baseURL}/api/comment/product_reviews/${id}?page=${currentPage}&limit=5`
+        )
         .then((resp) => {
           const { comments, showPagination, totalPage, success } = resp?.data;
           if (success) {
@@ -212,14 +216,11 @@ export default function ReviewAndComment() {
     };
     fetchData();
 
-    // dispatch(handleGetUserRating(id));
-
     window.addEventListener("resize", autoresize);
     return () => {
       window.removeEventListener("resize", autoresize);
     };
   }, [currentPage, id, updateUI]);
-  // Call fetchComments when productId or page changes
 
   return (
     <div className="product__reviews">
@@ -229,12 +230,14 @@ export default function ReviewAndComment() {
         className="relative flex flex-col gap-2"
         onSubmit={(e) => (isEditingComment ? handleSave(e) : handleAddComment)}
       >
-        <div className="flex items-center p-2 absolute top-10 right-0">
+        {modalForType === "genAIComment" && <CommentGeneration />}
+        <div className="flex items-center h-[80px] w-[150px] overflow-hidden justify-end p-2 gap-2 absolute top-[1rem] right-0">
+          <GenerativeComment modalForType={modalForType} />
           {isUserLoggedIn && (
             <button
               className="bg-transparent p-0"
               title="upload image"
-              onClick={openModal}
+              onClick={() => openModal("imageUpload")}
               type="button"
             >
               <FaCloudUploadAlt className="text-xl text-green-400" />
@@ -253,6 +256,7 @@ export default function ReviewAndComment() {
         {inputError ? (
           <p className="empty-err">Please leave a comment 😔</p>
         ) : null}
+        <InteractiveRating user={user} />
         <div className="">
           {isUserLoggedIn ? (
             isEditingComment ? (
@@ -266,7 +270,6 @@ export default function ReviewAndComment() {
               </button>
             ) : (
               <div>
-                <InteractiveRating user={user} />
                 <button
                   className="add_comment"
                   onClick={handleAddComment}

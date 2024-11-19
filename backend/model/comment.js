@@ -26,6 +26,10 @@ const CommentAndReview = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  genAIText: {
+    type: String,
+    ref: "commentText",
+  },
 });
 
 export const UserComment = mongoose.model("user_comment", CommentAndReview);

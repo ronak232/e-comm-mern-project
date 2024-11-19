@@ -3,11 +3,10 @@ import userRating from "./redux/feature/rating/ratingSlice.js";
 
 export const store = configureStore({
   reducer: {
-    rating: userRating
+    rating: userRating,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
     }),
-    
 });
