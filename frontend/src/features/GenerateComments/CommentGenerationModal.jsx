@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { FaRegCopy } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { MdClearAll } from "react-icons/md";
+import { handleCopyToClipBoard } from "../../utils/clipToCopy";
 
 function CommentGeneration() {
   const [aiComment, setAIComment] = useState("");
@@ -13,19 +14,6 @@ function CommentGeneration() {
   const { id } = useParams();
   const copyRef = useRef(null);
   const baseURL = process.env.REACT_APP_BASE_URL;
-
-  const handleCopyToClipBoard = () => {
-    if (copyRef) {
-      navigator.clipboard
-        .writeText(copyRef.current.value)
-        .then((resp) => {
-          return resp;
-        })
-        .catch((err) => {
-          console.error(err.message);
-        });
-    }
-  };
 
   const handleGenerativeMessage = async () => {
     setLoading(true);
@@ -78,6 +66,7 @@ function CommentGeneration() {
             value={aiComment}
             ref={copyRef}
             onChange={(e) => setAIComment(e.target.value)}
+            readOnly
           ></textarea>
         </div>
       )}
@@ -101,7 +90,7 @@ function CommentGeneration() {
             <button
               type="button"
               className="w-[10%] bg-transparent border-[1px] border-gray-300 border-solid"
-              onClick={handleCopyToClipBoard}
+              onClick={handleCopyToClipBoard(copyRef)}
             >
               <FaRegCopy />
             </button>

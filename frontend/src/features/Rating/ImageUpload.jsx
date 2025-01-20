@@ -73,7 +73,7 @@ function ImageUpload() {
     return resp.data.data;
   };
 
-  // react-query
+  // react-query2
   const { data: resp, isLoading } = useQuery(
     "uploadedImages",
     fetchUploadedImages
@@ -111,11 +111,7 @@ function ImageUpload() {
           });
         },
       })
-      .then((resp) => {
-        setImageFile({
-          img: resp.data.secure_url,
-          img_id: resp.data.public_id,
-        });
+      .then(() => {
         setLoading(false);
         setImageFile({ previews: [], files: [] });
       })
@@ -140,8 +136,6 @@ function ImageUpload() {
         if (resp.data && resp.data.success) {
           // Backend confirmed the like, update with the accurate count
           setLikes(resp.data.data);
-        } else {
-          throw new Error("Failed to confirm like with backend");
         }
       })
       .catch((err) => {

@@ -9,7 +9,7 @@ import { UserComment } from "../../model/comment.js";
 dotenv.config();
 
 export const handleGenerativePrompt = async (req, res) => {
-  const { genText, productId, isAIGenerated } = req.body;
+  const { genText, productId, isAIGenerated, userId } = req.body;
   try {
     if (!isAIGenerated) {
       return false;
@@ -41,10 +41,11 @@ export const handleGenerativePrompt = async (req, res) => {
     const result = await model.generateContent(genText);
     const genComment = result?.response?.text().replace(/[^\w ]/, "");
     console.log(genComment);
-    await UserComment.findOneAndUpdate(
+    await UserComment.findOneAndReplace(
       {
         productId,
         genText,
+        userId,
       },
       {
         $set: {

@@ -21,6 +21,7 @@ import Dashboard from "./Pages/Dashboard";
 import { useFirebaseAuth } from "./hooks/firebase/firebase..config.jsx";
 import { getAuth } from "firebase/auth";
 import { NotFoundPage } from "./Pages/Page-404";
+import Blogpost from "./Components/InteractiveBlog/SingleBlogpost";
 
 function App() {
   const theme = useContext(ThemeContext);
@@ -158,7 +159,7 @@ function App() {
             />
           }
         />
-        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:page" element={<Blog />} />
         <Route path="/pages" element={<Pages />} />
         <Route
           path="/cart"
@@ -193,6 +194,7 @@ function App() {
           }
         />
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/blog/trending-blogs/:slug" element={<Blogpost />} />
       </Routes>
       {<Footer />}
     </div>

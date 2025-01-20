@@ -1,49 +1,516 @@
 .blogs {
-  min-height: calc(100vh - 50vh - 20px);
-  padding: 48px 0;
-  &__container {
-    @include container(flex, center, baseline);
-  }
-  &__post {
-    &_slider {
-      display: flex;
-      &-card {
-        border-radius: 8px;
-        &-img {
-          img {
-            width: 100%;
-            border-radius: 10px;
-          }
-        }
-        &-label {
-          position: absolute;
-          right: 27px;
-          top: 16px;
-          padding: 8px 12px;
-          background: rgba(255, 255, 255, 0.45);
-          border-radius: 6px;
-          font-size: 16px;
-          color: $chrome-grey;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 0;
+  margin: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(57, 137, 255, 1) 100%
+  );
+}
 
-          &-clock {
-            margin-right: 4px;
-            padding-top: 3px;
-          }
-        }
-        &-body {
-          padding: 12px 0;
-        }
-        &-link {
-          font-size: 18px;
-          // color: $chrome-grey;
-          &:hover {
-            color: $primary-color;
-          }
+.blogs__container {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.blog-menu {
+  max-width: 100%;
+  font-family: $blog-font;
+  max-height: 100%;
+  border-radius: 14px 0px 0px 7px;
+  background: linear-gradient(211deg, #000000, #000000d5);
+  height: 100%;
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 46px 16px;
+    list-style: none;
+    align-items: flex-end;
+    background: transparent;
+    max-height: 100%;
+    height: 100%;
+
+    button {
+      background: transparent;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      color: white;
+      padding: 10px 8px;
+    }
+  }
+  @include devices(tablet) {
+    height: 0;
+  }
+}
+
+.ai-dashboard-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  position: relative;
+  gap: 40px;
+  min-width: 100%;
+  max-width: 400px;
+
+  .generated-content {
+    background: rgba(2, 0, 36, 0.281);
+    padding: 6px;
+    border-radius: 8px;
+
+    h1 {
+      font-size: 28px;
+    }
+
+    h2 {
+      font-size: 24px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+
+  .ai-dashboard {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 650px;
+    max-height: 800px;
+    height: 100%;
+    flex: 1;
+
+    .prompt {
+      &.user {
+        align-self: flex-end;
+        text-wrap: wrap;
+        border-radius: 10px;
+        padding: 6px;
+        color: white;
+        background: #00000069;
+        font-size: 16px;
+        max-width: 100%;
+      }
+
+      &.ai {
+        align-self: flex-start;
+        border-radius: 10px;
+        padding: 6px;
+        color: white;
+        background: #00000069;
+        max-width: 100%;
+        min-width: 100%;
+        font-size: 16px;
+      }
+
+      @include devices(tablet) {
+        &.ai,
+        &.user {
+          max-width: 100%;
         }
       }
     }
-    &_slide {
-      border: 1px solid black;
+
+    &-chats {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    @include devices(tablet) {
+      min-width: 100%;
+    }
+  }
+  form {
+    input {
+      flex: 1;
+      resize: none;
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 12px;
+      height: 45px;
+
+      &:focus {
+        border: none;
+        outline: none;
+      }
+    }
+  }
+  .generating-btn {
+    align-self: flex-start;
+    border: none;
+    cursor: pointer;
+    background: black;
+    padding: 0;
+
+    &:hover {
+      background: #ffff;
+    }
+  }
+  @media screen and (max-width: 480px) {
+    max-width: 300px;
+  }
+}
+
+.copy-clipboard {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  max-width: 100%;
+}
+
+.copy-text-container {
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(57, 137, 255, 1) 100%
+  );
+  border-radius: 6px;
+}
+
+.copy-btn {
+  background: rgba(2, 0, 36, 0.281);
+  color: white;
+  font-size: 12px;
+  padding: 8px;
+  font-weight: 400;
+}
+
+// Trending blog css
+.userblog {
+  &-gallery {
+    background-color: #a3c3ff6b;
+    border-radius: 5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+    cursor: pointer;
+    padding: 10px;
+
+    @include devices(tablet) {
+      width: calc(33.33% - 20px);
+    }
+  }
+
+  &-card {
+    width: 100%;
+  }
+
+  &-content {
+    width: 100%;
+    p {
+      width: 180px;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      text-align: left;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #000;
+    }
+    img {
+      min-height: 200px;
+      max-height: 350px;
+      aspect-ratio: 16/9;
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+
+  &_singlepost {
+    width: 100%;
+    height: 100%;
+    @include Container();
+    background: inherit;
+
+    li {
+      width: 100%;
+      padding: 30px 20px;
+
+      .skeleton-card {
+        height: 450px;
+      }
+    }
+
+    div {
+      p {
+        font-size: 16px;
+        font-family: $blog-font;
+        color: inherit;
+      }
+    }
+
+    &-blogcontent {
+      min-width: 100%;
+      width: 100%;
+      padding: 33px 12px;
+      height: auto;
+      position: relative;
+      color: inherit;
+    }
+  }
+}
+
+.blog-editor {
+  padding: 10px 0;
+  &-heading-option,
+  &-font-size {
+    border-radius: 8px;
+    padding: 6px 8px;
+    background: linear-gradient(
+      90deg,
+      rgb(126 63 255 / 79%) 0%,
+      rgb(57, 137, 255) 100%
+    );
+    color: $white-color;
+  }
+
+  &-controls {
+    &-ffdropdown {
+      position: absolute;
+      top: 30px;
+      width: max-content;
+      background: white;
+      padding: 2px;
+      border-radius: 6px;
+      font-size: 15px;
+      box-shadow: 2px 2px 30px rgba(2, 0, 36, 0.41);
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 4s ease-in-out, transform 3s ease-in-out;
+      z-index: 99;
+    }
+
+    &-ffdropdown.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    button {
+      width: 40px;
+    }
+  }
+
+  button {
+    border-radius: 8px;
+    padding: 7px 8px;
+    background: linear-gradient(
+      90deg,
+      rgb(126 63 255 / 79%) 0%,
+      rgb(57, 137, 255) 100%
+    );
+    color: $white-color;
+    font-size: 12px;
+
+    &.active {
+      background: linear-gradient(
+        200deg,
+        rgb(89 63 255) 0%,
+        rgb(0 225 171 / 83%) 100%
+      );
+    }
+
+    img {
+      width: 100%;
+      height: 20px;
+    }
+  }
+
+  .color-choice {
+    position: absolute;
+    top: 35px;
+    left: -35px;
+    background: rgb(215, 213, 250);
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 6px;
+    padding: 4px;
+    box-shadow: rgb(0 0 0 / 44%) 0px 1px 11px, rgba(0, 0, 0, 0.24) 4px 4px 22px;
+
+    span {
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  }
+
+  .ff-controller {
+    max-width: 100%;
+
+    button {
+      width: 100%;
+      max-width: max-content;
+      min-height: 100%;
+      font-size: 12px;
+    }
+  }
+
+  .heading-btn {
+    padding: 0 10px;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  &-icons {
+    width: 20px;
+    height: 20px;
+  }
+
+  &-post-btn {
+    display: inline-block;
+    padding: 10px 10px !important;
+    max-width: fit-content;
+  }
+}
+
+.blog-comments {
+  form {
+    display: flex;
+    gap: 6px;
+
+    textarea {
+      min-height: 80px;
+      flex: 1;
+      border-radius: 8px;
+      padding: 10px;
+      
+      &:focus {
+        outline: none;
+      }
+    }
+    button {
+      height: max-content;
+      background: linear-gradient(
+        140deg,
+        rgba(255, 65, 23, 0.79) 0%,
+        rgb(41, 38, 43) 100%
+      );
+      color: inherit;
+
+      :hover {
+        background: linear-gradient(
+          90deg,
+          rgba(169, 134, 239, 0.79) 0%,
+          rgb(57, 137, 255) 100%
+        );
+      }
+    }
+  }
+
+  &-box {
+    background: linear-gradient(278deg, #b1f5af , #ffffff);
+    padding: 17px 5px;
+    border-radius: 8px;
+    max-width: 500px;
+    color: darkblue;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.26);
+  }
+}
+
+.blog-tags {
+  max-width: fit-content;
+  display: inline-block;
+  border-radius: 8px;
+  padding: 8px;
+  background: linear-gradient(
+    90deg,
+    rgb(126 63 255 / 79%) 0%,
+    rgb(57, 137, 255) 100%
+  );
+  font-size: 16px;
+  color: $black-color;
+  font-weight: 600;
+}
+
+// tip-tap css
+
+.tiptap.ProseMirror {
+  height: 100%;
+  max-height: 100%;
+  width: 100%;
+  border: none;
+  color: $black-color;
+  padding: 10px;
+}
+.tiptap.ProseMirror:focus {
+  border: none;
+  outline: 0;
+}
+
+.tiptap {
+  /* Heading styles */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+    margin-top: 0.7rem;
+    text-wrap: pretty;
+    color: $black-color;
+  }
+
+  h1,
+  h2 {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 1rem;
+  }
+  ul,
+  ol {
+    padding: 0.2rem;
+    margin: 1.5rem;
+  }
+  ul li {
+    list-style-type: disc;
+  }
+  ol li {
+    list-style-type: decimal;
+  }
+
+  /* Images css */
+  img {
+    display: block;
+    height: auto;
+    margin: 1.5rem 0;
+    max-width: 100%;
+
+    &.ProseMirror-selectednode {
+      outline: 3px solid var(--purple);
     }
   }
 }

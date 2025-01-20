@@ -1,0 +1,48 @@
+import { Schema } from "mongoose";
+import mongoose from "mongoose";
+
+const postBlog = new Schema(
+  {
+    userId: {
+      type: String,
+      required: true,
+    },
+    content: {
+      userBlogs: [
+        {
+          postTitle: {
+            type: String,
+            required: true,
+          },
+          coverImage: {
+            type: String,
+          },
+          userName: {
+            type: String,
+            required: true,
+          },
+          blogContent: {
+            type: String,
+            required: true,
+          },
+          slug: {
+            type: String,
+            required: true,
+            unique: true,
+          },
+          timestamp: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
+    },
+    isTrending: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
+
+export const PostBlog = mongoose.model("UserBlog", postBlog);

@@ -20,11 +20,6 @@ export const handleLikedReaction = async (req, res) => {
           success: true,
           data: likes,
         });
-      } else {
-        res.status(400).json({
-          success: false,
-          message: "Bad Request",
-        });
       }
     })
     .catch(() => {

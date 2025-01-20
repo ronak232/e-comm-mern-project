@@ -263,3 +263,149 @@ Use false if you have mounted this middleware at a path designed to be strictly 
 
 
 cloudinary --- to save the images on server or cloud 
+
+
+      {isUserLoggedIn && (
+        <div className="ai-dashboard-chats">
+          {!isLoading ? (
+            <div className="flex flex-col gap-2">
+              {chats?.history?.map(({ chats }) => {
+                return chats?.map((item) => {
+                  return (
+                    <div className="flex flex-col gap-2" key={item._id}>
+                      <p className="prompt user text-right">
+                        {item.userPrompt}
+                      </p>
+                      <p className="generated-content prompt ai text-left">
+                        {item.aiGeneratedBlog}
+                      </p>
+                    </div>
+                  );
+                });
+              })}
+              <div>
+                {userPrompts?.length > 0 &&
+                  userPrompts?.map((mssg, index) => {
+                    console.log();
+                    return (
+                      <p
+                        key={index}
+                        className={
+                          mssg.isAiGenerated
+                            ? `generated-content prompt ai text-left`
+                            : `prompt user text-right`
+                        }
+                      >
+                        {mssg.message}
+                      </p>
+                    );
+                  })}
+              </div>
+            </div>
+          ) : (
+            <div>Loading...</div>
+          )}
+        </div>
+      )}
+
+
+        .ai-dashboard {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    .prompt {
+      &.user {
+        align-self: flex-end;
+        text-wrap: wrap;
+        border-radius: 10px;
+        padding: 6px;
+        color: white;
+        background: #00000069;
+        font-size: 16px;
+        max-width: 100%;
+        min-width: 500px;
+      }
+
+      &.ai {
+        align-self: flex-start;
+        border-radius: 10px;
+        padding: 6px;
+        color: white;
+        background: #00000069;
+        max-width: 100%;
+        min-width: 700px;
+        font-size: 16px;
+      }
+    }
+  }
+  .ai-dashboard-chats {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 450px;
+    max-height: 550px;
+
+    .prompt {
+      &.user {
+        align-self: flex-end;
+        text-wrap: wrap;
+        border-radius: 10px;
+        padding: 6px;
+        color: white;
+        background: #00000069;
+        font-size: 16px;
+        max-width: 100%;
+        min-width: 500px;
+      }
+
+      &.ai {
+        align-self: flex-start;
+        border-radius: 10px;
+        padding: 6px;
+        color: white;
+        background: #00000069;
+        max-width: 100%;
+        min-width: 700px;
+        font-size: 16px;
+      }
+    }
+  }
+
+ <div>
+                      <h1 className="text-lg">Title</h1>
+                      <p className="text-lg">{mssg.message.title}</p>
+                    </div>
+                    <div>
+                      <h2 className="text">Body</h2>
+                      <p>{mssg.message.introduction}</p>
+                    </div>
+                    <div>
+                      <h2>Introduction</h2>
+                      <p>{mssg.message.body}</p>
+                    </div>
+                    <div>
+                      <h2>Conclusion</h2>
+                      <p>{mssg.message.conclusion}</p>
+                    </div>
+
+
+                    setUserPrompts((prev) => {
+          const lastPrompt = prev[prev.length - 1]; // Get the last item
+
+          // If the last item is AI-generated, update its content
+          if (lastPrompt && lastPrompt.isAiGenerated) {
+            lastPrompt.message = data;
+            return [...prev];
+          }
+
+          // Otherwise, add a new AI-generated message
+          return [...prev, { message: {
+            title,
+            body,
+            conclusion,
+            introduction
+          }, isAiGenerated: true }];
+        });

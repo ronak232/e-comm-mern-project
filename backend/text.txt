@@ -1,0 +1,44 @@
+socket.on("blog-chunk", () => {
+          socket.emit("blog-progress", () => {
+            const blogModel = new GenAiBlogContent({
+              isAIGenerated: true,
+              blogContent: chunkText,
+            });
+            blogModel.save().then((resp) => {
+              socket.emit("blog-complete", resp.blogContent);
+            });
+          });
+        })
+
+
+import { llm } from "./langModel.js";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import dotenv from "dotenv";
+import { GenAiBlogContent } from "../../model/blog.js";
+dotenv.config();
+
+export const generatelangChainBlog = async (socket, userPrompt) => {
+  try {
+    let llmBlog = await llm.invoke([
+      new SystemMessage(
+        "Write the good blog according to the user requirements..."
+      ),
+      new HumanMessage(userPrompt),
+    ]);
+    if (llmBlog) {
+      let chunkText = "";
+      let chunkStream = llm.stream(userPrompt);
+      for await (const chunk of await chunkStream) {
+        const chunkData = chunk.content;
+        chunkText += chunkData
+        socket.emit("blog-chunk", { content: chunkText });
+      }
+
+       // Emit a completion event when all chunks are sent
+       socket.emit("blog-complete", { message: "Blog generation completed." });
+    }
+  } catch (err) {
+    console.log(err);
+    socket.emit("error", { message: "Error generating blog", error: err });
+  }
+};

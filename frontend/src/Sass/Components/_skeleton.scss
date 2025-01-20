@@ -11,7 +11,19 @@
   border-radius: 2.25rem;
 }
 
-.skeleton.comment {
+.skeleton-card {
+  background: linear-gradient(90deg, #d4d4d4 26%, #e0e0e0 55%);
+  height: 150px;
+  border-radius: 8px;
+}
+
+.skeleton-image {
+  background: linear-gradient(90deg, #ccc 26%, #e6e6e6 55%);
+  height: 200px;
+  border-radius: 10px;
+}
+
+.skeleton-comment {
   background: linear-gradient(
     90deg,
     rgb(208, 208, 208) 26%,
@@ -22,7 +34,7 @@
   min-height: 20px;
 }
 
-.skeleton.expression {
+.skeleton-expression {
   background: linear-gradient(
     90deg,
     rgb(225, 225, 225) 26%,
@@ -32,7 +44,7 @@
   min-height: 30px;
 }
 
-.skeleton.username {
+.skeleton-username {
   background: linear-gradient(
     90deg,
     rgb(184, 184, 184) 26%,

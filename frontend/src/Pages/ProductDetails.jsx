@@ -9,9 +9,8 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import Rating from "../features/Rating/Rating";
-import SkeletonCard from "../Components/Skeleton";
+import SkeletonCard from "../Components/SkeletonCard";
 import { ThemeContext } from "../hooks/context/thememode";
-import ShowStarRating from "../features/Rating/ShowStarRating";
 const ReviewAndComment = React.lazy(() =>
   import("../features/Rating/ReviewAndComment")
 );

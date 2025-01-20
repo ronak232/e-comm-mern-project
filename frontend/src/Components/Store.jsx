@@ -90,9 +90,7 @@ function Store() {
                       alt=""
                     />
                     <div className="products-listed--links">
-                      {/* <h6 className="products-listed--links-title"> */}
                       <a href="/">{item?.title}</a>
-                      {/* </h6> */}
                       <div className="products-listed--links-price">
                         {item?.price}
                       </div>

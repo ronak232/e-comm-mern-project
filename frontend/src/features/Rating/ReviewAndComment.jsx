@@ -6,7 +6,7 @@ import { getAuth } from "firebase/auth";
 import { BiEdit } from "react-icons/bi";
 import { GrDislike, GrLike } from "react-icons/gr";
 import { AiOutlineDelete } from "react-icons/ai";
-import SkeletonCard from "../../Components/Skeleton";
+import SkeletonCard from "../../Components/SkeletonCard";
 import ImageUpload from "./ImageUpload";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { useModal } from "../../hooks/context/useModal";

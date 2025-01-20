@@ -69,6 +69,11 @@ button {
   // font-family: $;
 }
 
+textarea {
+  color: $black-color;
+  border-radius: 8px;
+}
+
 .dark {
   background: $black-color;
   color: $white-color;

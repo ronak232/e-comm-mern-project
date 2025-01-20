@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "../Sass/Style.scss";
 import { HiBars3 } from "react-icons/hi2";
 import { CiUser, CiSearch } from "react-icons/ci";
@@ -135,7 +135,10 @@ function NavBar({ count, cartItems, data }) {
                   </Link>
                 </li>
                 <li className="main-navbar-content-list-items">
-                  <Link className="main-navbar-content-list-item" to="/blog">
+                  <Link
+                    className="main-navbar-content-list-item"
+                    to="/blog/trending-blogs"
+                  >
                     Blog
                   </Link>
                 </li>
