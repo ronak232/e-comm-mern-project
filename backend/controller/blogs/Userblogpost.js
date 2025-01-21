@@ -1,4 +1,5 @@
 import { PostBlog } from "../../model/postBlog.js";
+import { User } from "../../model/user.js";
 
 // fetch all post
 export const handleUserBlogPost = async (req, res) => {
@@ -21,15 +22,16 @@ export const handleFetchBySlug = async (req, res) => {
     },
   });
   if (post) {
-    const matchedBlog = post.content.userBlogs.find((blog) => blog.slug === slug);
+    const matchedBlog = post.content.userBlogs.find(
+      (blog) => blog.slug === slug
+    );
     return res.status(200).json({
-      post: [matchedBlog]
+      post: [matchedBlog],
     });
-  }
-  else {
+  } else {
     return res.status(404).json({
-      message:"Nothing here sorry...😔"
-    })
+      message: "Nothing here sorry...😔",
+    });
   }
 };
 
@@ -104,11 +106,22 @@ export const handleCreatePost = async (req, res) => {
   }
 };
 
-export const handleDeletePost = async (req, res) => {
-  
-}
-
+export const handleDeletePost = async (req, res) => {};
 
 export const handleBlogPostLikes = async (req, res) => {
-  
-}
+  const { user_id } = req.user;
+  const { postId } = req.params;
+
+  console.log(postId);
+
+  const user = await User.findById(user_id);
+  const post = await PostBlog.findById(postId);
+  console.log(user);
+  if (!user.likedPosts.includes(postId)) {
+    user.likedPosts.push(postId);
+    post.$inc({ likes: 1 });
+  }
+  await post.save();
+};
+
+export const handleBlogPostDislikes = async (req, res) => {};

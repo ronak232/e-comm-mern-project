@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { BlogComment } from "../../model/blogComment.js";
 import { User } from "../../model/user.js";
 
@@ -61,15 +60,17 @@ export const handleDeleteComments = async (req, res) => {
     const { user_id } = req.user;
     const { id } = req.params;
 
+    console.log("id", id);
+
     if (!user_id) {
       return res.status(401).json("Not authenticated");
     }
     const user = await User.findOne({ user_id });
+    console.log("user", user);
 
-    const deleteComment = await BlogComment.findOneAndDelete({
-      _id: id,
-      user: user._id,
-    });
+    const deleteComment = await BlogComment.findByIdAndDelete(id);
+
+    console.log("delete ", deleteComment);
 
     if (!deleteComment) {
       return res.status(403).json({

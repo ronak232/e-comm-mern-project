@@ -14,17 +14,19 @@ export const BlogComments = ({ postId }) => {
 
   const { data } = useFetchData(`/api/blog/comment/${postId}`, postId);
 
-  const { mutate: addComment, isLoading, isError } = usePostData(
-    `/api/blog/comment/${postId}`,
-    { userComment: blogComments, post: postId }
-  );
+  const {
+    mutate: addComment,
+    isLoading,
+    isError,
+  } = usePostData(`/api/blog/comment/post/${postId}`, {
+    userComment: blogComments,
+    post: postId,
+  });
 
-  const { mutate: deleteComment } = useDeleteData(
-    `/api/blog/comment/delete/678e11a6891c5be3e5536df3`
-  );
+  const { mutate: deleteComment } = useDeleteData();
 
-  const handleDeleteComment = (id) => {
-    deleteComment(id);
+  const handleDeleteComment = (id) => { 
+    deleteComment({ url: `/api/blog/comment/delete/${id}`, id });
   };
 
   const handleSubmit = (e) => {
@@ -72,7 +74,7 @@ export const BlogComments = ({ postId }) => {
 
                 <button
                   className="absolute right-0 bg-transparent p-0 text-lg"
-                  onClick={() => handleDeleteComment(item._id)}
+                  onClick={() => handleDeleteComment(item?._id)}
                 >
                   <MdDelete />
                 </button>

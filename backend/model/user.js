@@ -23,6 +23,14 @@ const userSchema = new Schema(
       type: [String],
       default: [],
     },
+    likedPosts: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UerBlog",
+    }],
+    dislikedPosts: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserBlog",
+    }]
   },
   { timestamps: true }
 );

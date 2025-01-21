@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useFetchData } from "../../utils/blogpostControl";
+import { useFetchData, usePostData, useUpdateData } from "../../utils/blogpostControl";
 import { useEffect, useState } from "react";
 import SkeletonCard from "../SkeletonCard";
 import { formatDateToLocal } from "../../utils/formatDate";
@@ -8,10 +8,19 @@ import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
 
 function Blogpost() {
   const { slug } = useParams();
+  const { postId } = useParams();
 
   const [blogData, setBlogData] = useState(null);
 
   const { data, isLoading, isError } = useFetchData(`/api/blog/${slug}`, slug);
+
+  console.log(data);
+
+  const { mutate: likeComment } = useUpdateData(`/api/blog/post/like/${postId}`);
+
+  const handleLike = (postId) => {
+    console.log(postId, likeComment);
+  };
 
   useEffect(() => {
     let timerId = 800;
@@ -42,7 +51,10 @@ function Blogpost() {
                   <span className="p-1 text-slate-400 text-[12px]">
                     {formatDateToLocal(item.timestamp)}
                   </span>
-                  <button className="bg-transparent p-1 text-base">
+                  <button
+                    className="bg-transparent p-1 text-base"
+                    onClick={() => handleLike(item._id)}
+                  >
                     <BiSolidLike />
                   </button>
                   <button className="bg-transparent p-1 text-base">
