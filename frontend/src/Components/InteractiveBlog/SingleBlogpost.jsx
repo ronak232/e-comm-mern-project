@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useFetchData, usePostData, useUpdateData } from "../../utils/blogpostControl";
+import { useFetchData, useUpdateData } from "../../utils/blogpostControl";
 import { useEffect, useState } from "react";
 import SkeletonCard from "../SkeletonCard";
 import { formatDateToLocal } from "../../utils/formatDate";
@@ -8,18 +8,25 @@ import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
 
 function Blogpost() {
   const { slug } = useParams();
-  const { postId } = useParams();
+  let key = "postId";
 
   const [blogData, setBlogData] = useState(null);
 
-  const { data, isLoading, isError } = useFetchData(`/api/blog/${slug}`, slug);
+  const { data, isLoading, isError } = useFetchData(`/api/blog/${slug}`, key);
 
-  console.log(data);
-
-  const { mutate: likeComment } = useUpdateData(`/api/blog/post/like/${postId}`);
+  const { mutate: likeComment } = useUpdateData(key);
 
   const handleLike = (postId) => {
-    console.log(postId, likeComment);
+    likeComment({
+      url: `/api/blog/post/like/${postId}`,
+      data: { reaction: "like" },
+    });
+  };
+  const handleDislike = (postId) => {
+    likeComment({
+      url: `/api/blog/post/like/${postId}`,
+      data: { reaction: "dislike" },
+    });
   };
 
   useEffect(() => {
@@ -33,12 +40,12 @@ function Blogpost() {
   return (
     <div className="userblog_singlepost">
       {!isLoading ? (
-        <div>
-          <div className="userblog_singlepost-blogcontent md:container bg-inherit">
+        <>
+          <section className="userblog_singlepost-blogcontent md:container bg-inherit">
             {blogData?.post?.map((item) => {
               return (
                 <>
-                  <p>{item.postTitle}</p>
+                  <h1>{item.postTitle}</h1>
                   <div
                     className="flex flex-col gap-6"
                     dangerouslySetInnerHTML={{
@@ -57,7 +64,10 @@ function Blogpost() {
                   >
                     <BiSolidLike />
                   </button>
-                  <button className="bg-transparent p-1 text-base">
+                  <button
+                    className="bg-transparent p-1 text-base"
+                    onClick={() => handleDislike(item._id)}
+                  >
                     <BiSolidDislike />
                   </button>
                   <div className="pt-4">
@@ -66,8 +76,8 @@ function Blogpost() {
                 </>
               );
             })}
-          </div>
-        </div>
+          </section>
+        </>
       ) : (
         <SkeletonCard
           layout={[

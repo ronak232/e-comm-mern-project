@@ -38,24 +38,26 @@ const deleteData = async (url, config = {}) => {
   }
 };
 
-const updateData = async (url ,data, config={}) => {
+const updateData = async (url, data, config = {}) => {
   try {
-      const tokenId = getAuth().currentUser?.getIdToken(true);
-      const response = axios.put(url, data, {
-        headers: {
-          Authorization: `Bearer ${tokenId}`
-        }
-      })
-      return (await response).data;
+    const tokenId = await getAuth().currentUser?.getIdToken(true);
+    const response = await axios.put(url, data, {
+      headers: {
+        Authorization: `Bearer ${tokenId}`,
+      },
+      ...config,
+    });
+    console.log("data ", response.data);
+    return response.data;
   } catch (error) {
-    throw new Error("Unable to update like")
+    throw new Error("Unable to update like");
   }
-}
+};
 
 // Create a custom hook that uses useQuery
 export const useFetchData = (url, key) => {
   return useQuery({
-    queryKey: [key],
+    queryKey: [`${key}`],
     queryFn: () => fetchData(url),
     enabled: !!url, // Only run the query if the URL is provided
     cacheTime: 3000,
@@ -65,21 +67,28 @@ export const useFetchData = (url, key) => {
 export const usePostData = (url) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data) => {
-      return await postData(url, data);
+    mutationFn: (data) => {
+      return postData(url, data);
     },
+    // Optimistically adds the comment
     onMutate: async (newComment) => {
-      await queryClient.cancelQueries(["comments"]);
+      await queryClient.cancelQueries(["comments", newComment.postId]);
 
-      const prevComments = queryClient.getQueryData(["comments"]);
+      const prevComments = queryClient.getQueryData([
+        "comments",
+        newComment.postId,
+      ]);
 
-      queryClient.setQueryData(["comments"], (oldComments) => {
-        return oldComments ? [...oldComments, newComment] : [newComment];
-      });
+      queryClient.setQueryData(
+        ["comments", newComment.postId],
+        (oldComments) => {
+          return oldComments ? [...oldComments, newComment] : [newComment];
+        }
+      );
       return { prevComments };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["comments"]);
+      queryClient.invalidateQueries(["comments", url]);
     },
     onError: (err) => {
       throw new Error("Failed to post data", err);
@@ -90,48 +99,64 @@ export const usePostData = (url) => {
   });
 };
 
-export const useDeleteData = () => {
+export const useDeleteData = (key) => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: async ({ url, id }) => {
-      return await deleteData(url, id);
+    mutationFn: ({ url, id }) => {
+      return deleteData(url, id);
     },
-    onMutate: async (commentId) => {
-      await queryClient.cancelQueries(["comments"]);
+    onMutate: async ({ commentId }) => {
+      await queryClient.cancelQueries([key]);
 
-      const previousComments = queryClient.getQueryData(["comments"]);
+      const previousComments = queryClient.getQueryData([key]) || [];
 
-      queryClient.setQueryData(["comments"], (oldComment) =>
-        oldComment ? oldComment.filter((comment) => comment._id !== commentId) : []
+      queryClient.setQueryData([key], (oldComment) =>
+        Array.isArray(oldComment)
+          ? oldComment?.filter((comment) => comment._id !== commentId)
+          : []
       );
+      console.log(previousComments);
 
       return { previousComments };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["comments"]);
+      queryClient.invalidateQueries([key]);
     },
   });
 };
 
 // updating
-export const useUpdateData = () => {
+export const useUpdateData = (key) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ url, id }) => {
-      return await updateData(url, id);
+    mutationFn: async ({ url, data }) => {
+      console.log("data", data);
+      return await updateData(url, data);
     },
-    onMutate: async (commentId) => {
-      await queryClient.cancelQueries(["comments"]);
+    onMutate: ({ data }) => {
+      queryClient.cancelQueries([key]);
 
-      const previousComments = queryClient.getQueryData(["comments"]);
+      const previousData = queryClient.getQueryData([key]) || [];
 
-      queryClient.setQueryData(["comments"]);
+      queryClient.setQueryData([key], (oldData) => {
+        if (!Array.isArray(oldData)) return previousData;
 
-      return { previousComments };
+        return oldData?.map((post) =>
+          post._id === data.postId
+            ? {
+                ...post,
+                likes:
+                  data.reaction === "like" ? post.likes + 1 : post.likes - 1,
+              }
+            : post
+        );
+      });
+
+      return { previousData };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["comments"]);
+      queryClient.invalidateQueries([key]);
     },
   });
 };
-

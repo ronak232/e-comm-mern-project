@@ -23,10 +23,12 @@ export const BlogComments = ({ postId }) => {
     post: postId,
   });
 
-  const { mutate: deleteComment } = useDeleteData();
+  let key = "postId"
+
+  const { mutate: deleteComment } = useDeleteData(key);
 
   const handleDeleteComment = (id) => { 
-    deleteComment({ url: `/api/blog/comment/delete/${id}`, id });
+    deleteComment({ url: `/api/blog/comment/delete/${id}`, id: id});
   };
 
   const handleSubmit = (e) => {

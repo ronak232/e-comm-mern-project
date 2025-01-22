@@ -1,3 +1,4 @@
+import { BlogComment } from "../../model/blogComment.js";
 import { PostBlog } from "../../model/postBlog.js";
 import { User } from "../../model/user.js";
 
@@ -109,19 +110,66 @@ export const handleCreatePost = async (req, res) => {
 export const handleDeletePost = async (req, res) => {};
 
 export const handleBlogPostLikes = async (req, res) => {
-  const { user_id } = req.user;
-  const { postId } = req.params;
+  try {
+    const { user_id } = req.user;
+    const { postId } = req.params;
+    const { reaction } = req.body;
 
-  console.log(postId);
+    const user = await User.findOne({ user_id });
 
-  const user = await User.findById(user_id);
-  const post = await PostBlog.findById(postId);
-  console.log(user);
-  if (!user.likedPosts.includes(postId)) {
-    user.likedPosts.push(postId);
-    post.$inc({ likes: 1 });
+    const post = await PostBlog.findById({ "content.userBlogs._id": postId });
+
+    const alreadyLiked = user.likedPosts.includes(postId);
+    const alreadyDisliked = user.dislikedPosts.includes(postId);
+
+    if (reaction === "like") {
+      if (alreadyLiked) {
+        user.likedPosts = user.likedPosts.filter((id) => id !== postId);
+        post.content.userBlogs.forEach((item) => {
+          return item._id === postId ? item.likes-- : item.likes;
+        });
+        console.log("post likes ", post)
+      } else {
+        if (alreadyDisliked) {
+          user.dislikedPosts = user.dislikedPosts.filter((id) => id !== postId);
+          post.content.userBlogs.map((item) => {
+            return item._id === postId ? item.dislikes-- : item.dislikes;
+          });
+        }
+        user.likedPosts.push(postId);
+        post.content.userBlogs.forEach((item) => {
+          return item._id === postId ? item.likes++ : item.likes;
+        });
+      }
+    } else if (reaction === "dislike") {
+      if (alreadyDisliked) {
+        user.dislikedPosts = user.dislikedPosts.filter((id) => id !== postId);
+        post.content.userBlogs.forEach((item) => {
+          return item._id === postId ? item.dislikes-- : item.dislikes;
+        });
+      } else {
+        if (alreadyLiked) {
+          user.likedPosts = user.likedPosts.filter((id) => id !== postId);
+          post.content.userBlogs.forEach((item) => {
+            return item._id === postId ? item.likes-- : item.likes;
+          });
+          console.log("post dislikes", post)
+        }
+        user.dislikedPosts.push(postId);
+        post.content.userBlogs.forEach((item) => {
+          return item._id === postId ? item.dislikes++ : item.dislikes;
+        });
+      }
+    }
+
+    await post.save();
+    await user.save();
+    return res.status(200).json({
+      message: "success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something wrong...",
+    });
   }
-  await post.save();
 };
-
-export const handleBlogPostDislikes = async (req, res) => {};

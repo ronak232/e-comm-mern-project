@@ -13,7 +13,7 @@ function ImageUpload() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState({ prog: 0 });
   const [likes, setLikes] = useState(0);
-  const [disLikes, setDisLikes] = useState(null);
+  const [disLikes, setDisLikes] = useState(0);
   const [checkUserHasLiked, setCheckUserHasLiked] = useState(false);
   const { id } = useParams();
   const { modalForType } = useModal();
