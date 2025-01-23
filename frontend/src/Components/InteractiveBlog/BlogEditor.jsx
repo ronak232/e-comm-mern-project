@@ -3,6 +3,7 @@ import sanitizeHtml from "sanitize-html";
 import { usePostData } from "../../utils/blogpostControl";
 import { TipTapEditor } from "../InteractiveBlog/TipTapEditor";
 import { getAuth } from "firebase/auth";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 function UserBlogWriting() {
   const [userBlogContent, setUserBlogContent] = useState(
@@ -16,7 +17,7 @@ function UserBlogWriting() {
     userId: getAuth().currentUser?.uid,
   };
 
-  const { mutate, isLoading, isError } = usePostData("/api/blog/post");
+  const { mutate, isLoading, isError } = usePostData(`${baseURL}/api/blog/post`);
 
   const handleCoverImageChange = (url) => {
     setCoverImage(url);

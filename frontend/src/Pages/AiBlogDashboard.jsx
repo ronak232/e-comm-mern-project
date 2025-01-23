@@ -3,11 +3,10 @@ import { io } from "socket.io-client";
 import { getAuth } from "firebase/auth";
 import { useFetchBlogAPI } from "../hooks/context/AiContext/AiContentGenerator";
 import { useFirebaseAuth } from "../hooks/firebase/firebase..config";
-import ReactMarkdown from "react-markdown";
 import loader from "../Images/ai-loader.gif";
 import { handleCopyToClipBoard } from "../utils/clipToCopy";
 
-const socketInstance = io("http://localhost:8000");
+const socketInstance = io(`${ process.env.REACT_APP_BASE_URL}`);
 
 function AiBlogGenerator() {
   const [userInput, setUserInput] = useState("");

@@ -7,18 +7,19 @@ import {
 import { formatDateToLocal } from "../../utils/formatDate";
 import { useFirebaseAuth } from "../../hooks/firebase/firebase..config";
 import { MdDelete } from "react-icons/md";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 export const BlogComments = ({ postId }) => {
   const [blogComments, setBlogComments] = useState("");
   const { isUserLoggedIn } = useFirebaseAuth();
 
-  const { data } = useFetchData(`/api/blog/comment/${postId}`, postId);
+  const { data } = useFetchData(`${baseURL}/api/blog/comment/${postId}`, postId);
 
   const {
     mutate: addComment,
     isLoading,
     isError,
-  } = usePostData(`/api/blog/comment/post/${postId}`, {
+  } = usePostData(`${baseURL}/api/blog/comment/post/${postId}`, {
     userComment: blogComments,
     post: postId,
   });
@@ -28,7 +29,7 @@ export const BlogComments = ({ postId }) => {
   const { mutate: deleteComment } = useDeleteData(key);
 
   const handleDeleteComment = (id) => { 
-    deleteComment({ url: `/api/blog/comment/delete/${id}`, id: id});
+    deleteComment({ url: `${baseURL}/api/blog/comment/delete/${id}`, id: id});
   };
 
   const handleSubmit = (e) => {

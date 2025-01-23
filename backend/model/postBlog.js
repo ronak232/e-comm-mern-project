@@ -3,10 +3,6 @@ import mongoose from "mongoose";
 
 const postBlog = new Schema(
   {
-    userId: {
-      type: String,
-      required: true,
-    },
     content: {
       userBlogs: [
         {

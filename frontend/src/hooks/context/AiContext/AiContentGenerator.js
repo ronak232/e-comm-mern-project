@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { useQuery } from "react-query";
-
+const baseURL = process.env.REACT_APP_BASE_URL;
 export const AiContext = createContext();
 
 export const useFetchBlogAPI = (userId) => {
@@ -9,7 +9,7 @@ export const useFetchBlogAPI = (userId) => {
   const { data: chats = null || {}, isLoading, isFetching } = useQuery(
     ["getBlog", userId],
     async () => {
-      return await fetchGenAiBlog(`/api/fetch/blogs/${userId}`);
+      return await fetchGenAiBlog(`${baseURL}/api/fetch/blogs/${userId}`);
     },
     {
       cacheTime: 10000,

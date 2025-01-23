@@ -1,4 +1,3 @@
-import { BlogComment } from "../../model/blogComment.js";
 import { PostBlog } from "../../model/postBlog.js";
 import { User } from "../../model/user.js";
 
@@ -95,7 +94,6 @@ export const handleCreatePost = async (req, res) => {
       });
       const post = await newUserPost.save();
       return res.status(201).json({
-        post,
         mssg: "Post created successfully",
       });
     }
@@ -114,62 +112,52 @@ export const handleBlogPostLikes = async (req, res) => {
     const { user_id } = req.user;
     const { postId } = req.params;
     const { reaction } = req.body;
-
+  
     const user = await User.findOne({ user_id });
-
-    const post = await PostBlog.findById({ "content.userBlogs._id": postId });
-
+    if (!user) return res.status(404).json({ message: "User not found" });
+  
     const alreadyLiked = user.likedPosts.includes(postId);
     const alreadyDisliked = user.dislikedPosts.includes(postId);
-
+  
+    let updateQuery;
+  
     if (reaction === "like") {
       if (alreadyLiked) {
-        user.likedPosts = user.likedPosts.filter((id) => id !== postId);
-        post.content.userBlogs.forEach((item) => {
-          return item._id === postId ? item.likes-- : item.likes;
-        });
-        console.log("post likes ", post)
+        user.likedPosts.pull(postId);
+        updateQuery = { $inc: { "content.userBlogs.$.likes": -1 } };
       } else {
-        if (alreadyDisliked) {
-          user.dislikedPosts = user.dislikedPosts.filter((id) => id !== postId);
-          post.content.userBlogs.map((item) => {
-            return item._id === postId ? item.dislikes-- : item.dislikes;
-          });
-        }
         user.likedPosts.push(postId);
-        post.content.userBlogs.forEach((item) => {
-          return item._id === postId ? item.likes++ : item.likes;
-        });
+        updateQuery = { $inc: { "content.userBlogs.$.likes": 1, "content.userBlogs.$.dislikes": alreadyDisliked ? -1 : 0 } };
+        if (alreadyDisliked) user.dislikedPosts.pull(postId);
       }
     } else if (reaction === "dislike") {
       if (alreadyDisliked) {
-        user.dislikedPosts = user.dislikedPosts.filter((id) => id !== postId);
-        post.content.userBlogs.forEach((item) => {
-          return item._id === postId ? item.dislikes-- : item.dislikes;
-        });
+        user.dislikedPosts.pull(postId);
+        updateQuery = { $inc: { "content.userBlogs.$.dislikes": -1 } };
       } else {
-        if (alreadyLiked) {
-          user.likedPosts = user.likedPosts.filter((id) => id !== postId);
-          post.content.userBlogs.forEach((item) => {
-            return item._id === postId ? item.likes-- : item.likes;
-          });
-          console.log("post dislikes", post)
-        }
         user.dislikedPosts.push(postId);
-        post.content.userBlogs.forEach((item) => {
-          return item._id === postId ? item.dislikes++ : item.dislikes;
-        });
+        updateQuery = { $inc: { "content.userBlogs.$.dislikes": 1, "content.userBlogs.$.likes": alreadyLiked ? -1 : 0 } };
+        if (alreadyLiked) user.likedPosts.pull(postId);
       }
+    } else {
+      return res.status(400).json({ message: "Invalid reaction type" });
     }
-
-    await post.save();
+  
+    await PostBlog.findOneAndUpdate(
+      { "content.userBlogs._id": postId },
+      updateQuery
+    );
+    
     await user.save();
+  
     return res.status(200).json({
-      message: "success",
+      message: "Success",
     });
   } catch (error) {
+    console.error("Error processing like/dislike:", error);
     return res.status(500).json({
-      message: "Something wrong...",
+      message: "Something went wrong...",
     });
   }
+  
 };

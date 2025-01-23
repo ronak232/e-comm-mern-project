@@ -12,7 +12,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { useModal } from "../../hooks/context/useModal";
 import InteractiveRating from "./InteractiveRating";
 import ShowStarRating from "./ShowStarRating";
-import GenerativeComment from "../GenerateComments/GenerativeAIComments";
+import GenerativeComment from "../GenerateComments/GenerativeAIPopup";
 import CommentGeneration from "../GenerateComments/CommentGenerationModal";
 const baseURL = process.env.REACT_APP_BASE_URL;
 

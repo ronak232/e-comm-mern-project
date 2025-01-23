@@ -6,7 +6,7 @@ const userSchema = new Schema(
     user_id: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     userName: {
       type: String,
@@ -16,25 +16,18 @@ const userSchema = new Schema(
     email: {
       type: String,
     },
-    img: {
-      type: String,
-    },
     savedPosts: {
       type: [String],
       default: [],
     },
-    likedPosts: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "UserBlog",
-      },
-    ],
-    dislikedPosts: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "UserBlog",
-      },
-    ],
+    likedPosts: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserBlog.content.userBlogs"
+    }],
+    dislikedPosts: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserBlog.content.userBlogs"
+    }]
   },
   { timestamps: true }
 );

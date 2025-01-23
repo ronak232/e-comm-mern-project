@@ -5,6 +5,7 @@ import SkeletonCard from "../SkeletonCard";
 import { formatDateToLocal } from "../../utils/formatDate";
 import { BlogComments } from "./BlogComments";
 import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 function Blogpost() {
   const { slug } = useParams();
@@ -12,19 +13,19 @@ function Blogpost() {
 
   const [blogData, setBlogData] = useState(null);
 
-  const { data, isLoading, isError } = useFetchData(`/api/blog/${slug}`, key);
+  const { data, isLoading, isError } = useFetchData(`${baseURL}/api/blog/${slug}`, key);
 
   const { mutate: likeComment } = useUpdateData(key);
 
   const handleLike = (postId) => {
     likeComment({
-      url: `/api/blog/post/like/${postId}`,
+      url: `${baseURL}/api/blog/post/like/${postId}`,
       data: { reaction: "like" },
     });
   };
   const handleDislike = (postId) => {
     likeComment({
-      url: `/api/blog/post/like/${postId}`,
+      url: `${baseURL}/api/blog/post/like/${postId}`,
       data: { reaction: "dislike" },
     });
   };
@@ -64,12 +65,14 @@ function Blogpost() {
                   >
                     <BiSolidLike />
                   </button>
+                  <span>{item.likes}</span>
                   <button
                     className="bg-transparent p-1 text-base"
                     onClick={() => handleDislike(item._id)}
                   >
                     <BiSolidDislike />
                   </button>
+                  <span>{item.dislikes}</span>
                   <div className="pt-4">
                     <BlogComments postId={item?._id} />
                   </div>
