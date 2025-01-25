@@ -1,9 +1,13 @@
-import React from 'react'
+import { useFetchData } from "../../utils/blogpostControl";
 
 function YourBlogs() {
-  return (
-    <div>YourBlogs</div>
-  )
+
+  const { data: getSavedPosts, isLoading } = useFetchData(
+    `/api/blog/post/saved`,
+    "savedPost"
+  );
+  console.log("saved post", getSavedPosts)
+  return <div>YourBlogs</div>;
 }
 
-export default YourBlogs
+export default YourBlogs;

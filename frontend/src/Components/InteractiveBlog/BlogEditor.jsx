@@ -17,7 +17,9 @@ function UserBlogWriting() {
     userId: getAuth().currentUser?.uid,
   };
 
-  const { mutate, isLoading, isError } = usePostData(`${baseURL}/api/blog/post`);
+  const { mutate, isLoading, isError } = usePostData(
+    `${baseURL}/api/blog/post`
+  );
 
   const handleCoverImageChange = (url) => {
     setCoverImage(url);
@@ -46,19 +48,17 @@ function UserBlogWriting() {
       content: userBlogContent,
       userName: blogData.get("userName"),
       userId: blogData.get("userId"),
-      coverImage: coverImage
+      coverImage: coverImage,
     };
-
-    console.log(blogContent)
 
     if (!isLoading && !isError) {
       mutate(blogContent);
     }
-    setUserBlogContent("")
+    setUserBlogContent("");
   };
 
   useEffect(() => {
-    if(user.userId)  {
+    if (user.userId) {
       localStorage.setItem("blogcontent", userBlogContent);
     }
   }, [userBlogContent, user.userId]);
@@ -70,7 +70,7 @@ function UserBlogWriting() {
           <TipTapEditor
             onContentChange={(content) => setUserBlogContent(content)}
             userBlogContent={userBlogContent}
-            onCoverImageChange = {handleCoverImageChange}
+            onCoverImageChange={handleCoverImageChange}
             coverImage={coverImage}
           />
           <button type="submit" className="blog-editor-post-btn">

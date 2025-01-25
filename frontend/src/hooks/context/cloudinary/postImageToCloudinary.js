@@ -22,7 +22,6 @@ export const uploadToCloudinary = async (url, imageFile, config = {}) => {
       headers: `Bearer ${tokenId}`, 
       ...config,
     });
-    console.log("image_url", resp.data.secure_url)
     return resp.data.secure_url;
   } catch (error) {
     if (error.response) {

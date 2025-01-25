@@ -121,7 +121,6 @@ export const TipTapEditor = ({
           "https://api.cloudinary.com/v1_1/dwc1sjsvj/image/upload",
           file
         );
-        console.log("type of ", cloudinaryUrl);
         onCoverImageChange(cloudinaryUrl);
       } catch (err) {}
     }

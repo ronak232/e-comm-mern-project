@@ -6,7 +6,7 @@ import { useFirebaseAuth } from "../hooks/firebase/firebase..config";
 import loader from "../Images/ai-loader.gif";
 import { handleCopyToClipBoard } from "../utils/clipToCopy";
 
-const socketInstance = io(`${ process.env.REACT_APP_BASE_URL}`);
+const socketInstance = io(`${process.env.REACT_APP_BASE_URL}` || "http://localhost:8000");
 
 function AiBlogGenerator() {
   const [userInput, setUserInput] = useState("");
@@ -79,7 +79,7 @@ function AiBlogGenerator() {
     <div className="ai-dashboard-container justify-between relative">
       {isUserLoggedIn && !isLoading && !isFetching ? (
         <div className="ai-dashboard">
-          {chats && chats.history.length > 0 ? (
+          {chats && chats.history?.length > 0 ? (
             chats?.history?.map(({ chats }) => {
               return chats?.map((item) => {
                 const { title, introduction, body, conclusion } = JSON.parse(

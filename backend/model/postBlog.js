@@ -40,6 +40,10 @@ const postBlog = new Schema(
           },
           likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
           dislikedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+          visits: {
+            type: Number,
+            default: 0,
+          },
         },
       ],
     },

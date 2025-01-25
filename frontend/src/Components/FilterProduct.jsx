@@ -10,18 +10,6 @@ function FilterProduct({ setcartFilter, cartFilter, allProducts }) {
     ...new Set(allProducts?.flat()?.map((item) => item?.category))//flat() method is used to flatten the paginated arrays into a single array before applying the filtering logic.
   ];
 
-  // To calculate the maximum price of the product.
-  const productPriceMaxValue = cartFilter?.reduce(
-    (prev, curr) => (prev.price > curr.price ? prev : curr),
-    1
-  );
-
-  // To calculate the minimum price of the product.
-  const productPriceMinValue = cartFilter?.reduce(
-    (prev, curr) => (prev.price < curr.price ? prev : curr),
-    1
-  );
-
   // to avoid running filterProductItems for every re-render
   // useCallback hook to memoize the function and only recreate it when its dependencies change.
   // This helps to optimize performance by preventing unnecessary re-creations of the function.

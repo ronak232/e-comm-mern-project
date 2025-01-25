@@ -20,6 +20,5 @@ export const useFetchBlogAPI = (userId) => {
       enabled: true, // Ensures the query only runs if userId is defined and Set this to false to disable this query from automatically running.
     }
   );
-  // console.log(isFetching);
   return { chats, isLoading, isFetching };
 };

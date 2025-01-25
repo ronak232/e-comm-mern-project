@@ -4,7 +4,13 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 
 // Define the fetch function
 const fetchData = async (url, params) => {
-  const response = await axios.get(url, { params });
+  const tokenId = await getAuth().currentUser?.getIdToken(true);
+  const response = await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${tokenId}`,
+    },
+    params,
+  });
   return response.data;
 };
 
@@ -38,16 +44,15 @@ const deleteData = async (url, config = {}) => {
   }
 };
 
-const updateData = async (url, data, config = {}) => {
+export const updateData = async (url, data, config = {}) => {
   try {
     const tokenId = await getAuth().currentUser?.getIdToken(true);
-    const response = await axios.put(url, data, {
+    const response = await axios.patch(url, data, {
       headers: {
         Authorization: `Bearer ${tokenId}`,
       },
       ...config,
     });
-    console.log("data ", response.data);
     return response.data;
   } catch (error) {
     throw new Error("Unable to update like");
@@ -57,7 +62,7 @@ const updateData = async (url, data, config = {}) => {
 // Create a custom hook that uses useQuery
 export const useFetchData = (url, key) => {
   return useQuery({
-    queryKey: [`${key}`],
+    queryKey: [key],
     queryFn: () => fetchData(url),
     enabled: !!url, // Only run the query if the URL is provided
     cacheTime: 3000,
@@ -116,22 +121,36 @@ export const useDeleteData = (key) => {
           ? oldComment?.filter((comment) => comment._id !== commentId)
           : []
       );
-      console.log(previousComments);
 
       return { previousComments };
     },
     onSuccess: () => {
       queryClient.invalidateQueries([key]);
     },
+    onError: () => {
+      throw new Error("Delete Update Error");
+    },
   });
 };
+
+function handleLikesAndDislikes(oldData, data, previousData) {
+  if (!Array.isArray(oldData)) return previousData;
+
+  return oldData?.map((post) =>
+    post._id === data.postId
+      ? {
+          ...post,
+          likes: data.reaction === "like" ? post.likes + 1 : post.likes - 1,
+        }
+      : post
+  );
+}
 
 // updating
 export const useUpdateData = (key) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ url, data }) => {
-      console.log("data", data);
       return await updateData(url, data);
     },
     onMutate: ({ data }) => {
@@ -140,17 +159,7 @@ export const useUpdateData = (key) => {
       const previousData = queryClient.getQueryData([key]) || [];
 
       queryClient.setQueryData([key], (oldData) => {
-        if (!Array.isArray(oldData)) return previousData;
-
-        return oldData?.map((post) =>
-          post._id === data.postId
-            ? {
-                ...post,
-                likes:
-                  data.reaction === "like" ? post.likes + 1 : post.likes - 1,
-              }
-            : post
-        );
+        handleLikesAndDislikes(oldData, data, previousData);
       });
 
       return { previousData };

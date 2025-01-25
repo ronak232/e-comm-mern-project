@@ -112,7 +112,6 @@ export const generatelangChainBlog = async (
       }
     }
   } catch (err) {
-    console.log(err);
     socket.emit("error", { message: "Error generating blog", error: err });
   }
 };

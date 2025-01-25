@@ -3,11 +3,6 @@ import mongoose from "mongoose";
 
 const userSchema = new Schema(
   {
-    user_id: {
-      type: String,
-      required: true,
-      unique: true
-    },
     userName: {
       type: String,
       required: true,
@@ -16,10 +11,14 @@ const userSchema = new Schema(
     email: {
       type: String,
     },
-    savedPosts: {
-      type: [String],
-      default: [],
+    postID: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "UserBlog"
     },
+    savedPosts: [{
+      type: Schema.Types.ObjectId,
+      ref: 'UserBlog' 
+    }],
     likedPosts: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserBlog.content.userBlogs"

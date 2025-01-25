@@ -150,11 +150,6 @@ function NavBar({ count, cartItems, data }) {
                     Account
                   </Link>
                 </li>
-                <li className="main-navbar-content-list-items">
-                  <Link to="/pages" className="main-navbar-content-list-item">
-                    Pages
-                  </Link>
-                </li>
               </ul>
             </div>
           </div>

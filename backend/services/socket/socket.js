@@ -7,13 +7,12 @@ dotenv.config();
 export const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL || "*",
+      origin: procees.env.FRONTEND_URL || "*",
       credentials: true,
       methods: ["GET", "POST", "DELETE"],
     },
   });
   io.on("connection", (socket) => {
-    console.log("connecteed...");
     socket.on("prompt-message", async (data) => {
       const { prompt, userName, userId } = data;
       if (prompt || userName || userId) {

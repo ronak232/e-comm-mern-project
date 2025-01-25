@@ -3,6 +3,8 @@ import {
   handleBlogPostLikes,
   handleCreatePost,
   handleFetchBySlug,
+  handleFetchSavePost,
+  handleSavingPost,
   handleUserBlogPost,
 } from "../controller/blogs/Userblogpost.js";
 import { authenticateToken } from "../middleware/validateToken.js";
@@ -14,16 +16,28 @@ import {
 
 const blogRoutes = express.Router();
 
+//Blog post routes
 blogRoutes.get("/api/blog/fetch", handleUserBlogPost);
 blogRoutes.get("/api/blog/:slug", handleFetchBySlug);
 blogRoutes.post("/api/blog/post", authenticateToken, handleCreatePost);
-blogRoutes.put(
+blogRoutes.patch(
   "/api/blog/post/like/:postId",
   authenticateToken,
   handleBlogPostLikes
 );
+blogRoutes.patch(
+  "/api/blog/post/like/:postId",
+  authenticateToken,
+  handleBlogPostLikes
+);
+blogRoutes.get(
+  "/api/blog/post/saved",
+  authenticateToken,
+  handleFetchSavePost
+);
+blogRoutes.put("/api/blog/post/save", authenticateToken, handleSavingPost);
 
-// Comments...
+// Comments routes...
 blogRoutes.post(
   "/api/blog/comment/post/:postId",
   authenticateToken,

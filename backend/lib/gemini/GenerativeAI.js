@@ -37,10 +37,8 @@ export const handleGenerativePrompt = async (req, res) => {
         temperature: 0.8,
       },
     });
-    console.log(genText);
     const result = await model.generateContent(genText);
     const genComment = result?.response?.text().replace(/[^\w ]/, "");
-    console.log(genComment);
     await UserComment.findOneAndReplace(
       {
         productId,

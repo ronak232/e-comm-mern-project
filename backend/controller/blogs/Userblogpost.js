@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { PostBlog } from "../../model/postBlog.js";
 import { User } from "../../model/user.js";
 
@@ -39,8 +40,6 @@ export const handleFetchBySlug = async (req, res) => {
 export const handleCreatePost = async (req, res) => {
   const { user_id } = req.user; // Ensure `req.user` is populated by middleware
   const { userName, content, postTitle, id, coverImage } = req.body;
-
-  console.log(req.body);
 
   let blogSlug = req.body.postTitle.replace(/ /g, "-").toLowerCase();
   let uniqueSlug = blogSlug;
@@ -105,29 +104,32 @@ export const handleCreatePost = async (req, res) => {
   }
 };
 
-export const handleDeletePost = async (req, res) => {};
-
 export const handleBlogPostLikes = async (req, res) => {
   try {
     const { user_id } = req.user;
     const { postId } = req.params;
     const { reaction } = req.body;
-  
+
     const user = await User.findOne({ user_id });
     if (!user) return res.status(404).json({ message: "User not found" });
-  
+
     const alreadyLiked = user.likedPosts.includes(postId);
     const alreadyDisliked = user.dislikedPosts.includes(postId);
-  
+
     let updateQuery;
-  
+
     if (reaction === "like") {
       if (alreadyLiked) {
         user.likedPosts.pull(postId);
         updateQuery = { $inc: { "content.userBlogs.$.likes": -1 } };
       } else {
         user.likedPosts.push(postId);
-        updateQuery = { $inc: { "content.userBlogs.$.likes": 1, "content.userBlogs.$.dislikes": alreadyDisliked ? -1 : 0 } };
+        updateQuery = {
+          $inc: {
+            "content.userBlogs.$.likes": 1,
+            "content.userBlogs.$.dislikes": alreadyDisliked ? -1 : 0,
+          },
+        };
         if (alreadyDisliked) user.dislikedPosts.pull(postId);
       }
     } else if (reaction === "dislike") {
@@ -136,20 +138,25 @@ export const handleBlogPostLikes = async (req, res) => {
         updateQuery = { $inc: { "content.userBlogs.$.dislikes": -1 } };
       } else {
         user.dislikedPosts.push(postId);
-        updateQuery = { $inc: { "content.userBlogs.$.dislikes": 1, "content.userBlogs.$.likes": alreadyLiked ? -1 : 0 } };
+        updateQuery = {
+          $inc: {
+            "content.userBlogs.$.dislikes": 1,
+            "content.userBlogs.$.likes": alreadyLiked ? -1 : 0,
+          },
+        };
         if (alreadyLiked) user.likedPosts.pull(postId);
       }
     } else {
       return res.status(400).json({ message: "Invalid reaction type" });
     }
-  
+
     await PostBlog.findOneAndUpdate(
       { "content.userBlogs._id": postId },
       updateQuery
     );
-    
+
     await user.save();
-  
+
     return res.status(200).json({
       message: "Success",
     });
@@ -159,5 +166,67 @@ export const handleBlogPostLikes = async (req, res) => {
       message: "Something went wrong...",
     });
   }
-  
+};
+
+export const handleFetchSavePost = async (req, res) => {
+  try {
+    const { user_id } = req.user;
+
+    if (!user_id) {
+      return res.status(401).json({
+        message: "Access denied",
+      });
+    }
+    const user = await User.findOne({ user_id }).populate({
+      path: "savedPosts",
+      select: "content.userBlogs",
+    });
+
+    // Extract the userBlogs from the populated savedPosts
+    const savedBlogs =
+      user?.savedPosts?.map((post) => post.content.userBlogs) || [];
+
+    console.log("saved ", savedBlogs);
+    return res.status(200).json(savedBlogs);
+  } catch (error) {
+    console.error("Error fetching saved posts:", error);
+    return res.status(500).json({
+      message: "server error",
+      error: error.message,
+    });
+  }
+};
+
+export const handleSavingPost = async (req, res) => {
+  try {
+    const { postId } = req.body;
+    const { user_id } = req.user;
+
+    const user = await User.findOne({ user_id });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isSaved = user.savedPosts.some((post) => post.toString() === postId.toString());
+
+    if (isSaved) {
+      await User.findByIdAndUpdate(user._id, {
+        $pull: { savedPosts: postId },
+      });
+    } else {
+      await User.findByIdAndUpdate(user._id, {
+        $push: { savedPosts: postId },
+      });
+    }
+
+    return res.status(200).json({
+      isSaved: !isSaved,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
 };
