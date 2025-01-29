@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function TrendingBlog() {
-  const { data, isLoading, isError } = useFetchData(`${baseURL}/api/blog/fetch`);
+  const { data, isLoading, isError } = useFetchData(`/api/blog/fetch`);
   const [sortData, setSortData] = useState([]);
   const [defaultOption, setDefaultOption] = useState("all");
 

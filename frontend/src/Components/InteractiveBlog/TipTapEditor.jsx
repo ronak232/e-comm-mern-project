@@ -149,6 +149,7 @@ export const TipTapEditor = ({
     input.click();
   };
 
+  // Font Family component
   const MyFontFamily = () => {
     const toggleFontFamily = (font) => {
       if (editor) {
@@ -206,6 +207,7 @@ export const TipTapEditor = ({
     );
   };
 
+  // Text color change
   const TextColor = () => {
     const handleColorChange = (color) => {
       setColorChoice((prev) => ({

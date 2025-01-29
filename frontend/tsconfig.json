@@ -22,7 +22,7 @@
   },
   "include": [
     "src"
-  ],
+, "../backend/services/langchain/langchainTranslator.js"  ],
   "exclude": [
     "node_modules"
   ]

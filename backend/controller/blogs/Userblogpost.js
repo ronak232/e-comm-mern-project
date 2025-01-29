@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { PostBlog } from "../../model/postBlog.js";
 import { User } from "../../model/user.js";
 
@@ -31,7 +30,7 @@ export const handleFetchBySlug = async (req, res) => {
     });
   } else {
     return res.status(404).json({
-      message: "Nothing here sorry...😔",
+      message: "Nothing is here sorry...😔",
     });
   }
 };
@@ -208,7 +207,9 @@ export const handleSavingPost = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isSaved = user.savedPosts.some((post) => post.toString() === postId.toString());
+    const isSaved = user.savedPosts.some(
+      (post) => post.toString() === postId.toString()
+    );
 
     if (isSaved) {
       await User.findByIdAndUpdate(user._id, {
@@ -229,4 +230,15 @@ export const handleSavingPost = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+export const fetchUserPosts = async (req, res) => {
+  const { user_id, name } = req.user; 
+  
+  const getUserPosts = await PostBlog.findOne({
+    user_id,
+    "content.$.userBlogs.userName": name,
+  });
+  console.log("user fata ", getUserPosts);
+  res.status(200).json(getUserPosts);
 };

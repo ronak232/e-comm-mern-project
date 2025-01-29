@@ -1,9 +1,15 @@
+import { getAuth } from "firebase/auth";
 import { useFetchData } from "../../utils/blogpostControl";
+
 
 function YourBlogs() {
 
+  const getTokenId = getAuth().currentUser?.getIdToken();
+
+  console.log("token ", getTokenId);
+
   const { data: getSavedPosts, isLoading } = useFetchData(
-    `/api/blog/post/saved`,
+    `/api/blog/user/fetch`,
     "savedPost"
   );
   console.log("saved post", getSavedPosts)

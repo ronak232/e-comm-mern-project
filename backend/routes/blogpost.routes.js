@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  fetchUserPosts,
   handleBlogPostLikes,
   handleCreatePost,
   handleFetchBySlug,
@@ -36,6 +37,7 @@ blogRoutes.get(
   handleFetchSavePost
 );
 blogRoutes.put("/api/blog/post/save", authenticateToken, handleSavingPost);
+blogRoutes.get("/api/blog/user/fetch", authenticateToken, fetchUserPosts);
 
 // Comments routes...
 blogRoutes.post(
