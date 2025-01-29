@@ -23,6 +23,17 @@
   border-radius: 10px;
 }
 
+.skeleton-body {
+  background: linear-gradient(
+    90deg,
+    rgb(208, 208, 208) 26%,
+    rgb(211, 208, 208) 55%
+  );
+  width: 100%;
+  max-width: 140px;
+  min-height: 20px;
+}
+
 .skeleton-comment {
   background: linear-gradient(
     90deg,

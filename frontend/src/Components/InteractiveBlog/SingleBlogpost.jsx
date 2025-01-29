@@ -15,7 +15,7 @@ import { useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { MdTranslate } from "react-icons/md";
 const baseURL = process.env.REACT_APP_BASE_URL;
-const socketInstance = io(`${process.env.REACT_APP_BASE_URL}` || "http://localhost:8000");
+const socketInstance = io(`${baseURL}` || "http://localhost:8000");
 
 function Blogpost() {
   const { slug } = useParams();
@@ -126,33 +126,31 @@ function Blogpost() {
                       <IoMdSave className="text-lg" />
                       <span className="text-[12px] p-1">Save Post</span>
                     </button>
-                    <div className="text-black flex items-center">
+                    <div className="text-black flex items-center gap-2">
                       <button
-                        className="bg-transparent p-0"
+                        className="bg-transparent p-0 text-[18px]"
                         onClick={showLanguageDropdow}
                         title="Translate"
                       >
                         <MdTranslate />
                       </button>
                       <select
-                        className={`userblog_lang_option ${
-                          showHide ? "showDropdown" : ""
-                        }`}
+                        className="focus:none outline-none rounded-md text-[12px]"
                         onChange={handleTextTranslation}
                       >
-                        <option className="" value="eng">
+                        <option className="font-semibold font-mono" value="eng">
                           English
                         </option>
-                        <option className="" value="fr">
+                        <option className="font-semibold font-mono" value="fr">
                           French
                         </option>
-                        <option className="" value="de">
+                        <option className="font-semibold font-mono" value="de">
                           German
                         </option>
-                        <option className="" value="es">
+                        <option className="font-semibold font-mono" value="es">
                           Spanish
                         </option>
-                        <option className="" value="hi">
+                        <option className="font-semibold font-mono" value="hi">
                           Hindi
                         </option>
                       </select>
@@ -162,7 +160,7 @@ function Blogpost() {
                     <>
                       <div
                         className={`border-[1px] rounded-md mt-2 relative blog_translation ${
-                          showHide ? "show" : ""
+                          !showHide ? "show" : ""
                         }`}
                       >
                         <button onClick={handleShowTranslation}>
