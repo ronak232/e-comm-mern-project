@@ -1,13 +1,14 @@
 import { Server } from "socket.io";
 import dotenv from "dotenv";
 import { generatelangChainBlog } from "../langchain/langChainContentGenerate.js";
+import { handlelangTranslation } from "../langchain/textTranslation.js";
 dotenv.config();
 
 // const socketServer = http.createServer();
 export const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: procees.env.FRONTEND_URL || "*",
+      origin:  "*",
       credentials: true,
       methods: ["GET", "POST", "DELETE"],
     },
@@ -19,6 +20,21 @@ export const initSocket = (server) => {
         await generatelangChainBlog(socket, prompt, userName, userId);
       } else {
         console.error("Missing required parameters:", data);
+      }
+    });
+
+    socket.on("text_translation", async (data) => {
+      try {
+        const { translate_lang, content, postTitle } = data;
+
+        if (translate_lang === undefined && translate_lang === "") {
+          throw new Error("Select language...");
+        }
+        else {
+          await handlelangTranslation(socket, translate_lang, content, postTitle)
+        }
+      } catch (error) {
+        throw new Error("Something went wrong...", error.message);
       }
     });
 

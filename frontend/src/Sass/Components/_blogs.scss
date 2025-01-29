@@ -263,6 +263,10 @@
       height: auto;
       position: relative;
       color: inherit;
+
+      h1 {
+        color: inherit;
+      }
     }
   }
 }
@@ -379,6 +383,33 @@
   }
 }
 
+.userblog_lang_option {
+  display: none;
+
+  &.showDropdown {
+    display: block;
+  }
+}
+
+.blog_translation {
+  margin-top: 18px;
+  display: none;
+  box-shadow: 0px -10px 8px rgba(0, 0, 0, 0.24);
+
+  button {
+    background: transparent;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 22px;
+  }
+
+  &.show {
+    display: block;
+    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) ease-in-out;
+  }
+}
+
 .blog-comments {
   form {
     display: flex;
@@ -389,7 +420,7 @@
       flex: 1;
       border-radius: 8px;
       padding: 10px;
-      
+
       &:focus {
         outline: none;
       }
@@ -414,7 +445,7 @@
   }
 
   &-box {
-    background: linear-gradient(278deg, #b1f5af , #ffffff);
+    background: linear-gradient(278deg, #b1f5af, #ffffff);
     padding: 17px 5px;
     border-radius: 8px;
     max-width: 500px;

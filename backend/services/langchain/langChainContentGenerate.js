@@ -32,7 +32,7 @@ export const generatelangChainBlog = async (
 
     const systemMessage = new SystemMessage(`
       You are an expert blog writer. keep one thing in mind if user is authenticated greet user with name ${userName} don't just start with the content... 
-      Only Write a blog post based on the user's input like write blog on topic or something when user asked to.
+      only Write a blog post based on the user's input like write blog on topic or something when user asked to.
       Write in a clear, concise style and generate SEO-friendly blog content. Target audience: general public.
     `);
 
