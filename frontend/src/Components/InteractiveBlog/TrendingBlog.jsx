@@ -2,10 +2,13 @@ import { useFetchData } from "../../utils/blogpostControl";
 import SkeletonCard from "../../Components/SkeletonCard";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useFirebaseAuth } from "../../hooks/firebase/firebase..config";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function TrendingBlog() {
-  const { data, isLoading, isError } = useFetchData(`${baseURL}/api/blog/fetch`);
+  const { data, isLoading, isError } = useFetchData(
+    `${baseURL}/api/blog/fetch`
+  );
   const [sortData, setSortData] = useState([]);
   const [defaultOption, setDefaultOption] = useState("all");
 

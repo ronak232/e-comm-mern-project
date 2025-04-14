@@ -185,7 +185,6 @@ export const handleFetchSavePost = async (req, res) => {
     const savedBlogs =
       user?.savedPosts?.map((post) => post.content.userBlogs) || [];
 
-    console.log("saved ", savedBlogs);
     return res.status(200).json(savedBlogs);
   } catch (error) {
     console.error("Error fetching saved posts:", error);
@@ -239,6 +238,5 @@ export const fetchUserPosts = async (req, res) => {
     user_id,
     "content.$.userBlogs.userName": name,
   });
-  console.log("user fata ", getUserPosts);
   res.status(200).json(getUserPosts);
 };
