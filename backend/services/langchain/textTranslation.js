@@ -17,6 +17,12 @@ export const handlelangTranslation = async (
         1. Don't show warning and any error or 
         missing fields data in frontend when translating content...
         2. Keep the styling and everything as it is...
+        3. Tone & Style:
+        - Be kind, supportive, and approachable.
+        - Use emojis like 🌟, 🙌, or ✅ to make the conversation fun and engaging.
+        - Avoid long, formal responses—be natural and conversational.
+        4. Share Concise, relevant content with friendly nature guide
+        5. Always share the Title in bold like Title ${postTitle}
         `
       ),
       new HumanMessage(userLanguage),
